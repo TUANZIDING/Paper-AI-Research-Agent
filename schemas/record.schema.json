@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/record.schema.json",
+  "title": "AI Research Agent publication record",
+  "type": "object",
+  "required": [
+    "title", "authors", "journal", "year", "doi", "pmid", "pmcid",
+    "publication_types", "access_status", "access_url", "retraction_status",
+    "verification_status", "verification_reasons", "conflicts", "evidence",
+    "citation_ready"
+  ],
+  "properties": {
+    "title": {"type": "string", "minLength": 1},
+    "authors": {"type": "array", "items": {"type": "string"}},
+    "journal": {"type": ["string", "null"]},
+    "year": {"type": ["integer", "null"], "minimum": 1000, "maximum": 9999},
+    "doi": {"type": ["string", "null"], "pattern": "^10\\.[^/]+/.+$"},
+    "pmid": {"type": ["string", "null"], "pattern": "^[0-9]+$"},
+    "pmcid": {"type": ["string", "null"]},
+    "publication_types": {"type": "array", "items": {"type": "string"}},
+    "access_status": {"enum": ["open", "closed_or_not_open", "unknown"]},
+    "access_url": {"type": ["string", "null"]},
+    "retraction_status": {"enum": ["flagged", "not_flagged", "unknown"]},
+    "publication_status": {"enum": ["retracted", "expression_of_concern", "correction", "no_signal", "unknown"]},
+    "status_signals": {"type": "array", "items": {"type": "string"}},
+    "publication_status_check_complete": {"type": "boolean"},
+    "status_relations": {"type": "array", "items": {"$ref": "#/$defs/status_relation"}},
+    "publication_status_sources_checked": {"type": "array", "items": {"type": "string"}},
+    "verification_status": {"enum": ["discovered", "authoritative_id_verified", "cross_source_verified", "metadata_conflict", "unverified"]},
+    "verification_reasons": {"type": "array", "items": {"type": "string"}},
+    "conflicts": {"type": "array", "items": {"type": "string"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "field_provenance": {"type": "object"},
+    "citation_ready": {"type": "boolean"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "status_relation": {
+      "type": "object",
+      "required": ["ref_type", "pmid", "doi", "note"],
+      "properties": {
+        "ref_type": {"type": "string", "minLength": 1},
+        "pmid": {"type": ["string", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "note": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["source", "record_id", "url", "retrieved_at", "title", "doi", "pmid", "note", "evidence_id"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "record_id": {"type": ["string", "null"]},
+        "url": {"type": "string", "minLength": 1},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "title": {"type": ["string", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "pmid": {"type": ["string", "null"]},
+        "note": {"type": ["string", "null"]},
+        "evidence_id": {"type": "string", "pattern": "^ev-[0-9a-f]{20}$"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

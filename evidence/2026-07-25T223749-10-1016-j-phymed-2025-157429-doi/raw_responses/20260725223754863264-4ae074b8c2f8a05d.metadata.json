@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T22:37:54.863264+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/xml,text/xml",
+      "Host": "eutils.ncbi.nlm.nih.gov"
+    },
+    "method": "GET",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?tool=ai_research_agent&db=pubmed&retmode=xml&id=41297318"
+  },
+  "response": {
+    "body_file": "20260725223754863264-4ae074b8c2f8a05d.response",
+    "byte_length": 10614,
+    "sha256": "4ae074b8c2f8a05d067a695f688c38d52ec8a218a42e88ad54db302f90ed6140"
+  },
+  "schema_version": 1
+}

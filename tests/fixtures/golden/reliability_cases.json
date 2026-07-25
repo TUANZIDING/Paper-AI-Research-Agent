@@ -1,0 +1,44 @@
+[
+  {
+    "case_id": "normal_verified",
+    "category": "normal",
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false
+  },
+  {
+    "case_id": "retracted_crossref",
+    "category": "retraction",
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true
+  },
+  {
+    "case_id": "correction_pending",
+    "category": "correction",
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true
+  },
+  {
+    "case_id": "expression_of_concern",
+    "category": "expression_of_concern",
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true
+  },
+  {
+    "case_id": "invalid_doi",
+    "category": "identifier_mismatch",
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true
+  },
+  {
+    "case_id": "status_lookup_partial",
+    "category": "partial_api",
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true
+  }
+]

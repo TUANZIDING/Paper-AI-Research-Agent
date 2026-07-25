@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/external-review-packet.schema.json",
+  "title": "Externally signed human-read request packet",
+  "type": "object",
+  "required": ["schema_version", "event_type", "issued_at", "reviewer_role", "material_sha256", "claim_evidence_ids", "confirmation_statement", "identity_claim", "packet_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_type": {"const": "HUMAN_READ_EXTERNAL_SIGNATURE_REQUEST"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "reviewer_role": {"type": "string", "pattern": "^anonymous_[a-z0-9]+(?:_[a-z0-9]+)*$"},
+    "material_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claim_evidence_ids": {"type": "array", "items": {"type": "string", "pattern": "^ce-[0-9a-f]{24}$"}},
+    "confirmation_statement": {"type": "string", "minLength": 20},
+    "identity_claim": {"const": "unverified_key_holder"},
+    "packet_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

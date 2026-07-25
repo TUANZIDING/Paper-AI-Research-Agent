@@ -1,0 +1,18 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T22:37:59.510313+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json"
+    },
+    "method": "GET",
+    "url": "https://api.crossref.org/works?filter=updates%3A10.1177%2F1758835920922055&rows=100"
+  },
+  "response": {
+    "body_file": "20260725223759510313-1ffc22c9ba8f7cbf.response",
+    "byte_length": 2809,
+    "sha256": "1ffc22c9ba8f7cbf3f278bf11f71486ce0d363b0d322ed346c873ebe82a1b745"
+  },
+  "schema_version": 1
+}

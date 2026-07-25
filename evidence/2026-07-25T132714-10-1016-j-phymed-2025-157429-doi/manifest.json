@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.2",
+  "started_at": "2026-07-25T13:27:14.337895+00:00",
+  "completed_at": "2026-07-25T13:27:22.211622+00:00",
+  "query": "10.1016/j.phymed.2025.157429[doi]",
+  "requested_limit_per_source": 5,
+  "source_totals": {
+    "pubmed": 1,
+    "europe_pmc": 1
+  },
+  "source_queries": {
+    "pubmed": "10.1016/j.phymed.2025.157429[doi]",
+    "europe_pmc": "DOI:10.1016/j.phymed.2025.157429"
+  },
+  "source_pagination": {
+    "pubmed": {
+      "state": "complete",
+      "total_available": 1,
+      "records_returned": 1,
+      "pages_fetched": 1,
+      "max_records": 5,
+      "errors": []
+    },
+    "europe_pmc": {
+      "state": "complete",
+      "total_available": 1,
+      "records_returned": 1,
+      "pages_fetched": 1,
+      "max_records": 5,
+      "errors": []
+    }
+  },
+  "search_complete": true,
+  "returned_after_deduplication": 1,
+  "citation_ready": 1,
+  "partial": false,
+  "issues": [],
+  "output_sha256": {
+    "raw_responses/20260725132716747023-9fabcf3bed6478ed.metadata.json": "970ffe758c376ef73f0c25f60f2203f706711612f86f387d59f311039487f7e5",
+    "raw_responses/20260725132716747023-9fabcf3bed6478ed.response": "9fabcf3bed6478eda712fa3f9ee16373261934c24794f1aa69beb681cb97ed03",
+    "raw_responses/20260725132718034164-d1f57727c5e58da2.metadata.json": "3628e01568839d32168ad03e3865e19a591ca1582ed80a7ae303b95474b47b67",
+    "raw_responses/20260725132718034164-d1f57727c5e58da2.response": "d1f57727c5e58da26ca8152dee04e185d4f3b1043ea42067942827705920c70a",
+    "raw_responses/20260725132719871585-ace1bca253da51f5.metadata.json": "bcb913ea2db37cd26dbfe19b505e217855e779bfe7a602b8bdb4867a0c6d3eb4",
+    "raw_responses/20260725132719871585-ace1bca253da51f5.response": "ace1bca253da51f57939ac5cdcba31f10136a6e4528c7933539e88d71fb20e98",
+    "raw_responses/20260725132721093463-c773b63f320186d6.metadata.json": "00d4b120ddf92c4829878698959bb89ac79e65f357b1570ab1027f9b88e0ab8f",
+    "raw_responses/20260725132721093463-c773b63f320186d6.response": "c773b63f320186d69ec0ccbb7b3b129486953c52cc347039385fb32eb7d27aba",
+    "raw_responses/20260725132722207203-b057219f9b26c515.metadata.json": "ef5c2ca5e0157f3d8178cf83fcdf936854e5380d8cf8179c66ec68e2566873cf",
+    "raw_responses/20260725132722207203-b057219f9b26c515.response": "b057219f9b26c515f4fd142293923aee20766ba07fda3805ef6baa28bb42bf44",
+    "records.jsonl": "a9e6566a173b1e3dd2adbf7932defe30f8557be8ccc89fc57aec982dbf58c79f",
+    "report.md": "ecc987d7d38d86521dadddc2065cdb2be8ab00d45a71b228045b06ce235b46a0"
+  },
+  "scope_statement": "This run searched selected open APIs only. It is not equivalent to Embase, Scopus, or Web of Science coverage.",
+  "integrity_statement": "Citation-ready means identifier/metadata verification passed in this run; it does not mean the full text was human-read or the study quality was appraised."
+}

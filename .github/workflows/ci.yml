@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_network_smoke:
+        description: Run the non-blocking live API smoke test
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    name: Offline Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests
+        run: PYTHONPATH=src python -m unittest discover -s tests -v
+      - name: Compile shipped modules and tests
+        run: python -m compileall -q src tests scripts
+      - name: Release and evidence verification
+        run: PYTHONPATH=src python scripts/verify_release.py
+      - name: Isolated install
+        run: |
+          python -m venv "$RUNNER_TEMP/release-venv"
+          "$RUNNER_TEMP/release-venv/bin/python" -m pip install .
+          "$RUNNER_TEMP/release-venv/bin/research-agent" --help
+          "$RUNNER_TEMP/release-venv/bin/research-agent" search --help
+          "$RUNNER_TEMP/release-venv/bin/research-agent" verify-run --help
+      - name: Whitespace check
+        run: git diff --check
+
+  network-smoke:
+    name: Live API smoke test (non-blocking)
+    if: github.event_name == 'workflow_dispatch' && inputs.run_network_smoke
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Known DOI smoke test
+        env:
+          RESEARCH_AGENT_EMAIL: ${{ secrets.RESEARCH_AGENT_EMAIL }}
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+        run: |
+          PYTHONPATH=src python -m ai_research_agent.cli search \
+            '10.1016/j.phymed.2025.157429[doi]' \
+            --limit 2 --page-size 2 --json --output "$RUNNER_TEMP/network-smoke"

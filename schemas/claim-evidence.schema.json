@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/claim-evidence.schema.json",
+  "title": "Claim to evidence location binding",
+  "type": "object",
+  "required": [
+    "schema_version", "claim_id", "claim_text_hash", "material_sha256",
+    "evidence_id", "anchor_kind", "anchor_value", "excerpt_sha256",
+    "locator_status", "requested_support_status", "support_status",
+    "component_support_statuses", "human_review_status",
+    "attestation_event_hash", "identity_verified", "boundary_statement"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "claim_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "claim_text_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "material_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "evidence_id": {"type": "string", "pattern": "^ev-[0-9a-f]{20}$"},
+    "anchor_kind": {"enum": ["page", "section", "paragraph", "quote"]},
+    "anchor_value": {"type": "string", "minLength": 1},
+    "excerpt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "locator_status": {"const": "located"},
+    "requested_support_status": {"enum": ["SUPPORTED", "UNSUPPORTED", "AMBIGUOUS", "UNVERIFIABLE_ACCESS"]},
+    "support_status": {"enum": ["SUPPORTED", "UNSUPPORTED", "AMBIGUOUS", "UNVERIFIABLE_ACCESS"]},
+    "component_support_statuses": {"type": "array", "items": {"enum": ["SUPPORTED", "UNSUPPORTED", "AMBIGUOUS", "UNVERIFIABLE_ACCESS"]}},
+    "human_review_status": {"enum": ["not_attested", "self_attested"]},
+    "attestation_event_hash": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "identity_verified": {"const": false},
+    "boundary_statement": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

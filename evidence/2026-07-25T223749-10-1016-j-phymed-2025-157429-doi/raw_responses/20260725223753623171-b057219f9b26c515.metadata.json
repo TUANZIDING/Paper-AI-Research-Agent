@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T22:37:53.623171+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Host": "api.crossref.org"
+    },
+    "method": "GET",
+    "url": "https://api.crossref.org/works?filter=updates%3A10.1016%2Fj.phymed.2025.157429&rows=100"
+  },
+  "response": {
+    "body_file": "20260725223753623171-b057219f9b26c515.response",
+    "byte_length": 188,
+    "sha256": "b057219f9b26c515f4fd142293923aee20766ba07fda3805ef6baa28bb42bf44"
+  },
+  "schema_version": 1
+}

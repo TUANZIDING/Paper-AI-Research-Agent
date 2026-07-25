@@ -1,0 +1,2402 @@
+[
+  {
+    "case_id": "synthetic-normal-001",
+    "category": "normal",
+    "scenario_variant": 1,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-002",
+    "category": "normal",
+    "scenario_variant": 2,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-003",
+    "category": "normal",
+    "scenario_variant": 3,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-004",
+    "category": "normal",
+    "scenario_variant": 4,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-005",
+    "category": "normal",
+    "scenario_variant": 5,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-006",
+    "category": "normal",
+    "scenario_variant": 6,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-007",
+    "category": "normal",
+    "scenario_variant": 7,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-008",
+    "category": "normal",
+    "scenario_variant": 8,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-009",
+    "category": "normal",
+    "scenario_variant": 9,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-010",
+    "category": "normal",
+    "scenario_variant": 10,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-011",
+    "category": "normal",
+    "scenario_variant": 11,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-012",
+    "category": "normal",
+    "scenario_variant": 12,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-013",
+    "category": "normal",
+    "scenario_variant": 13,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-014",
+    "category": "normal",
+    "scenario_variant": 14,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-015",
+    "category": "normal",
+    "scenario_variant": 15,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-016",
+    "category": "normal",
+    "scenario_variant": 16,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-017",
+    "category": "normal",
+    "scenario_variant": 17,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-018",
+    "category": "normal",
+    "scenario_variant": 18,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-019",
+    "category": "normal",
+    "scenario_variant": 19,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-020",
+    "category": "normal",
+    "scenario_variant": 20,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-021",
+    "category": "normal",
+    "scenario_variant": 21,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-022",
+    "category": "normal",
+    "scenario_variant": 22,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-023",
+    "category": "normal",
+    "scenario_variant": 23,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-024",
+    "category": "normal",
+    "scenario_variant": 24,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-025",
+    "category": "normal",
+    "scenario_variant": 25,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-026",
+    "category": "normal",
+    "scenario_variant": 26,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-027",
+    "category": "normal",
+    "scenario_variant": 27,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-028",
+    "category": "normal",
+    "scenario_variant": 28,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-029",
+    "category": "normal",
+    "scenario_variant": 29,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-normal-030",
+    "category": "normal",
+    "scenario_variant": 30,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": true,
+    "critical": false,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-001",
+    "category": "retraction",
+    "scenario_variant": 1,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-002",
+    "category": "retraction",
+    "scenario_variant": 2,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-003",
+    "category": "retraction",
+    "scenario_variant": 3,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-004",
+    "category": "retraction",
+    "scenario_variant": 4,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-005",
+    "category": "retraction",
+    "scenario_variant": 5,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-006",
+    "category": "retraction",
+    "scenario_variant": 6,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-007",
+    "category": "retraction",
+    "scenario_variant": 7,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-008",
+    "category": "retraction",
+    "scenario_variant": 8,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-009",
+    "category": "retraction",
+    "scenario_variant": 9,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-010",
+    "category": "retraction",
+    "scenario_variant": 10,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-011",
+    "category": "retraction",
+    "scenario_variant": 11,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-012",
+    "category": "retraction",
+    "scenario_variant": 12,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-013",
+    "category": "retraction",
+    "scenario_variant": 13,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-014",
+    "category": "retraction",
+    "scenario_variant": 14,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-015",
+    "category": "retraction",
+    "scenario_variant": 15,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-016",
+    "category": "retraction",
+    "scenario_variant": 16,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-017",
+    "category": "retraction",
+    "scenario_variant": 17,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-018",
+    "category": "retraction",
+    "scenario_variant": 18,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-019",
+    "category": "retraction",
+    "scenario_variant": 19,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-020",
+    "category": "retraction",
+    "scenario_variant": 20,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-021",
+    "category": "retraction",
+    "scenario_variant": 21,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-022",
+    "category": "retraction",
+    "scenario_variant": 22,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-023",
+    "category": "retraction",
+    "scenario_variant": 23,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-024",
+    "category": "retraction",
+    "scenario_variant": 24,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-025",
+    "category": "retraction",
+    "scenario_variant": 25,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-026",
+    "category": "retraction",
+    "scenario_variant": 26,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-027",
+    "category": "retraction",
+    "scenario_variant": 27,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-028",
+    "category": "retraction",
+    "scenario_variant": 28,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-029",
+    "category": "retraction",
+    "scenario_variant": 29,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-retraction-030",
+    "category": "retraction",
+    "scenario_variant": 30,
+    "expected_publication_status": "retracted",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-001",
+    "category": "correction",
+    "scenario_variant": 1,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-002",
+    "category": "correction",
+    "scenario_variant": 2,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-003",
+    "category": "correction",
+    "scenario_variant": 3,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-004",
+    "category": "correction",
+    "scenario_variant": 4,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-005",
+    "category": "correction",
+    "scenario_variant": 5,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-006",
+    "category": "correction",
+    "scenario_variant": 6,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-007",
+    "category": "correction",
+    "scenario_variant": 7,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-008",
+    "category": "correction",
+    "scenario_variant": 8,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-009",
+    "category": "correction",
+    "scenario_variant": 9,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-010",
+    "category": "correction",
+    "scenario_variant": 10,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-011",
+    "category": "correction",
+    "scenario_variant": 11,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-012",
+    "category": "correction",
+    "scenario_variant": 12,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-013",
+    "category": "correction",
+    "scenario_variant": 13,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-014",
+    "category": "correction",
+    "scenario_variant": 14,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-015",
+    "category": "correction",
+    "scenario_variant": 15,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-016",
+    "category": "correction",
+    "scenario_variant": 16,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-017",
+    "category": "correction",
+    "scenario_variant": 17,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-018",
+    "category": "correction",
+    "scenario_variant": 18,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-019",
+    "category": "correction",
+    "scenario_variant": 19,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-020",
+    "category": "correction",
+    "scenario_variant": 20,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-021",
+    "category": "correction",
+    "scenario_variant": 21,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-022",
+    "category": "correction",
+    "scenario_variant": 22,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-023",
+    "category": "correction",
+    "scenario_variant": 23,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-024",
+    "category": "correction",
+    "scenario_variant": 24,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-025",
+    "category": "correction",
+    "scenario_variant": 25,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-026",
+    "category": "correction",
+    "scenario_variant": 26,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-027",
+    "category": "correction",
+    "scenario_variant": 27,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-028",
+    "category": "correction",
+    "scenario_variant": 28,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-029",
+    "category": "correction",
+    "scenario_variant": 29,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-correction-030",
+    "category": "correction",
+    "scenario_variant": 30,
+    "expected_publication_status": "correction",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-001",
+    "category": "expression_of_concern",
+    "scenario_variant": 1,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-002",
+    "category": "expression_of_concern",
+    "scenario_variant": 2,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-003",
+    "category": "expression_of_concern",
+    "scenario_variant": 3,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-004",
+    "category": "expression_of_concern",
+    "scenario_variant": 4,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-005",
+    "category": "expression_of_concern",
+    "scenario_variant": 5,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-006",
+    "category": "expression_of_concern",
+    "scenario_variant": 6,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-007",
+    "category": "expression_of_concern",
+    "scenario_variant": 7,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-008",
+    "category": "expression_of_concern",
+    "scenario_variant": 8,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-009",
+    "category": "expression_of_concern",
+    "scenario_variant": 9,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-010",
+    "category": "expression_of_concern",
+    "scenario_variant": 10,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-011",
+    "category": "expression_of_concern",
+    "scenario_variant": 11,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-012",
+    "category": "expression_of_concern",
+    "scenario_variant": 12,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-013",
+    "category": "expression_of_concern",
+    "scenario_variant": 13,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-014",
+    "category": "expression_of_concern",
+    "scenario_variant": 14,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-015",
+    "category": "expression_of_concern",
+    "scenario_variant": 15,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-016",
+    "category": "expression_of_concern",
+    "scenario_variant": 16,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-017",
+    "category": "expression_of_concern",
+    "scenario_variant": 17,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-018",
+    "category": "expression_of_concern",
+    "scenario_variant": 18,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-019",
+    "category": "expression_of_concern",
+    "scenario_variant": 19,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-020",
+    "category": "expression_of_concern",
+    "scenario_variant": 20,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-021",
+    "category": "expression_of_concern",
+    "scenario_variant": 21,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-022",
+    "category": "expression_of_concern",
+    "scenario_variant": 22,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-023",
+    "category": "expression_of_concern",
+    "scenario_variant": 23,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-024",
+    "category": "expression_of_concern",
+    "scenario_variant": 24,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-025",
+    "category": "expression_of_concern",
+    "scenario_variant": 25,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-026",
+    "category": "expression_of_concern",
+    "scenario_variant": 26,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-027",
+    "category": "expression_of_concern",
+    "scenario_variant": 27,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-028",
+    "category": "expression_of_concern",
+    "scenario_variant": 28,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-029",
+    "category": "expression_of_concern",
+    "scenario_variant": 29,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-expression_of_concern-030",
+    "category": "expression_of_concern",
+    "scenario_variant": 30,
+    "expected_publication_status": "expression_of_concern",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-001",
+    "category": "identifier_mismatch",
+    "scenario_variant": 1,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-002",
+    "category": "identifier_mismatch",
+    "scenario_variant": 2,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-003",
+    "category": "identifier_mismatch",
+    "scenario_variant": 3,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-004",
+    "category": "identifier_mismatch",
+    "scenario_variant": 4,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-005",
+    "category": "identifier_mismatch",
+    "scenario_variant": 5,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-006",
+    "category": "identifier_mismatch",
+    "scenario_variant": 6,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-007",
+    "category": "identifier_mismatch",
+    "scenario_variant": 7,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-008",
+    "category": "identifier_mismatch",
+    "scenario_variant": 8,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-009",
+    "category": "identifier_mismatch",
+    "scenario_variant": 9,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-010",
+    "category": "identifier_mismatch",
+    "scenario_variant": 10,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-011",
+    "category": "identifier_mismatch",
+    "scenario_variant": 11,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-012",
+    "category": "identifier_mismatch",
+    "scenario_variant": 12,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-013",
+    "category": "identifier_mismatch",
+    "scenario_variant": 13,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-014",
+    "category": "identifier_mismatch",
+    "scenario_variant": 14,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-015",
+    "category": "identifier_mismatch",
+    "scenario_variant": 15,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-016",
+    "category": "identifier_mismatch",
+    "scenario_variant": 16,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-017",
+    "category": "identifier_mismatch",
+    "scenario_variant": 17,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-018",
+    "category": "identifier_mismatch",
+    "scenario_variant": 18,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-019",
+    "category": "identifier_mismatch",
+    "scenario_variant": 19,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-020",
+    "category": "identifier_mismatch",
+    "scenario_variant": 20,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-021",
+    "category": "identifier_mismatch",
+    "scenario_variant": 21,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-022",
+    "category": "identifier_mismatch",
+    "scenario_variant": 22,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-023",
+    "category": "identifier_mismatch",
+    "scenario_variant": 23,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-024",
+    "category": "identifier_mismatch",
+    "scenario_variant": 24,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-025",
+    "category": "identifier_mismatch",
+    "scenario_variant": 25,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-026",
+    "category": "identifier_mismatch",
+    "scenario_variant": 26,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-027",
+    "category": "identifier_mismatch",
+    "scenario_variant": 27,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-028",
+    "category": "identifier_mismatch",
+    "scenario_variant": 28,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-029",
+    "category": "identifier_mismatch",
+    "scenario_variant": 29,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-identifier_mismatch-030",
+    "category": "identifier_mismatch",
+    "scenario_variant": 30,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-001",
+    "category": "partial_api",
+    "scenario_variant": 1,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-002",
+    "category": "partial_api",
+    "scenario_variant": 2,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-003",
+    "category": "partial_api",
+    "scenario_variant": 3,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-004",
+    "category": "partial_api",
+    "scenario_variant": 4,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-005",
+    "category": "partial_api",
+    "scenario_variant": 5,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-006",
+    "category": "partial_api",
+    "scenario_variant": 6,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-007",
+    "category": "partial_api",
+    "scenario_variant": 7,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-008",
+    "category": "partial_api",
+    "scenario_variant": 8,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-009",
+    "category": "partial_api",
+    "scenario_variant": 9,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-010",
+    "category": "partial_api",
+    "scenario_variant": 10,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-011",
+    "category": "partial_api",
+    "scenario_variant": 11,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-012",
+    "category": "partial_api",
+    "scenario_variant": 12,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-013",
+    "category": "partial_api",
+    "scenario_variant": 13,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-014",
+    "category": "partial_api",
+    "scenario_variant": 14,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-015",
+    "category": "partial_api",
+    "scenario_variant": 15,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-016",
+    "category": "partial_api",
+    "scenario_variant": 16,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-017",
+    "category": "partial_api",
+    "scenario_variant": 17,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-018",
+    "category": "partial_api",
+    "scenario_variant": 18,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-019",
+    "category": "partial_api",
+    "scenario_variant": 19,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-020",
+    "category": "partial_api",
+    "scenario_variant": 20,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-021",
+    "category": "partial_api",
+    "scenario_variant": 21,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-022",
+    "category": "partial_api",
+    "scenario_variant": 22,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-023",
+    "category": "partial_api",
+    "scenario_variant": 23,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-024",
+    "category": "partial_api",
+    "scenario_variant": 24,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-025",
+    "category": "partial_api",
+    "scenario_variant": 25,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-026",
+    "category": "partial_api",
+    "scenario_variant": 26,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-027",
+    "category": "partial_api",
+    "scenario_variant": 27,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-028",
+    "category": "partial_api",
+    "scenario_variant": 28,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-029",
+    "category": "partial_api",
+    "scenario_variant": 29,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-partial_api-030",
+    "category": "partial_api",
+    "scenario_variant": 30,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-001",
+    "category": "wrong_target",
+    "scenario_variant": 1,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-002",
+    "category": "wrong_target",
+    "scenario_variant": 2,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-003",
+    "category": "wrong_target",
+    "scenario_variant": 3,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-004",
+    "category": "wrong_target",
+    "scenario_variant": 4,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-005",
+    "category": "wrong_target",
+    "scenario_variant": 5,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-006",
+    "category": "wrong_target",
+    "scenario_variant": 6,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-007",
+    "category": "wrong_target",
+    "scenario_variant": 7,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-008",
+    "category": "wrong_target",
+    "scenario_variant": 8,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-009",
+    "category": "wrong_target",
+    "scenario_variant": 9,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-010",
+    "category": "wrong_target",
+    "scenario_variant": 10,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-011",
+    "category": "wrong_target",
+    "scenario_variant": 11,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-012",
+    "category": "wrong_target",
+    "scenario_variant": 12,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-013",
+    "category": "wrong_target",
+    "scenario_variant": 13,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-014",
+    "category": "wrong_target",
+    "scenario_variant": 14,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-015",
+    "category": "wrong_target",
+    "scenario_variant": 15,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-016",
+    "category": "wrong_target",
+    "scenario_variant": 16,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-017",
+    "category": "wrong_target",
+    "scenario_variant": 17,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-018",
+    "category": "wrong_target",
+    "scenario_variant": 18,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-019",
+    "category": "wrong_target",
+    "scenario_variant": 19,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-020",
+    "category": "wrong_target",
+    "scenario_variant": 20,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-021",
+    "category": "wrong_target",
+    "scenario_variant": 21,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-022",
+    "category": "wrong_target",
+    "scenario_variant": 22,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-023",
+    "category": "wrong_target",
+    "scenario_variant": 23,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-024",
+    "category": "wrong_target",
+    "scenario_variant": 24,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-025",
+    "category": "wrong_target",
+    "scenario_variant": 25,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-026",
+    "category": "wrong_target",
+    "scenario_variant": 26,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-027",
+    "category": "wrong_target",
+    "scenario_variant": 27,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-028",
+    "category": "wrong_target",
+    "scenario_variant": 28,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-029",
+    "category": "wrong_target",
+    "scenario_variant": 29,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-wrong_target-030",
+    "category": "wrong_target",
+    "scenario_variant": 30,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-001",
+    "category": "missing_status_hash",
+    "scenario_variant": 1,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-002",
+    "category": "missing_status_hash",
+    "scenario_variant": 2,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-003",
+    "category": "missing_status_hash",
+    "scenario_variant": 3,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-004",
+    "category": "missing_status_hash",
+    "scenario_variant": 4,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-005",
+    "category": "missing_status_hash",
+    "scenario_variant": 5,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-006",
+    "category": "missing_status_hash",
+    "scenario_variant": 6,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-007",
+    "category": "missing_status_hash",
+    "scenario_variant": 7,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-008",
+    "category": "missing_status_hash",
+    "scenario_variant": 8,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-009",
+    "category": "missing_status_hash",
+    "scenario_variant": 9,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-010",
+    "category": "missing_status_hash",
+    "scenario_variant": 10,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-011",
+    "category": "missing_status_hash",
+    "scenario_variant": 11,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-012",
+    "category": "missing_status_hash",
+    "scenario_variant": 12,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-013",
+    "category": "missing_status_hash",
+    "scenario_variant": 13,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-014",
+    "category": "missing_status_hash",
+    "scenario_variant": 14,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-015",
+    "category": "missing_status_hash",
+    "scenario_variant": 15,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-016",
+    "category": "missing_status_hash",
+    "scenario_variant": 16,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-017",
+    "category": "missing_status_hash",
+    "scenario_variant": 17,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-018",
+    "category": "missing_status_hash",
+    "scenario_variant": 18,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-019",
+    "category": "missing_status_hash",
+    "scenario_variant": 19,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-020",
+    "category": "missing_status_hash",
+    "scenario_variant": 20,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-021",
+    "category": "missing_status_hash",
+    "scenario_variant": 21,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-022",
+    "category": "missing_status_hash",
+    "scenario_variant": 22,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-023",
+    "category": "missing_status_hash",
+    "scenario_variant": 23,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-024",
+    "category": "missing_status_hash",
+    "scenario_variant": 24,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-025",
+    "category": "missing_status_hash",
+    "scenario_variant": 25,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-026",
+    "category": "missing_status_hash",
+    "scenario_variant": 26,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-027",
+    "category": "missing_status_hash",
+    "scenario_variant": 27,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-028",
+    "category": "missing_status_hash",
+    "scenario_variant": 28,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-029",
+    "category": "missing_status_hash",
+    "scenario_variant": 29,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  },
+  {
+    "case_id": "synthetic-missing_status_hash-030",
+    "category": "missing_status_hash",
+    "scenario_variant": 30,
+    "expected_publication_status": "unknown",
+    "expected_citation_ready": false,
+    "critical": true,
+    "label_source": "synthetic_contract_v1",
+    "human_adjudicated": false
+  }
+]

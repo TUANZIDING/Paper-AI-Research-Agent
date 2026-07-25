@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T13:27:19.871585+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Host": "www.ebi.ac.uk"
+    },
+    "method": "GET",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI%3A10.1016%2Fj.phymed.2025.157429&format=json&resultType=lite&pageSize=5&cursorMark=%2A"
+  },
+  "response": {
+    "body_file": "20260725132719871585-ace1bca253da51f5.response",
+    "byte_length": 928,
+    "sha256": "ace1bca253da51f57939ac5cdcba31f10136a6e4528c7933539e88d71fb20e98"
+  },
+  "schema_version": 1
+}

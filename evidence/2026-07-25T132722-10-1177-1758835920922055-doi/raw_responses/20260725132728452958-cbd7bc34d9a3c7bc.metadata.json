@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T13:27:28.452958+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Host": "www.ebi.ac.uk"
+    },
+    "method": "GET",
+    "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=DOI%3A10.1177%2F1758835920922055&format=json&resultType=lite&pageSize=5&cursorMark=%2A"
+  },
+  "response": {
+    "body_file": "20260725132728452958-cbd7bc34d9a3c7bc.response",
+    "byte_length": 1067,
+    "sha256": "cbd7bc34d9a3c7bc50ca04c498323ba83b0786dc81286ee4b3d97adf6cf91ce6"
+  },
+  "schema_version": 1
+}

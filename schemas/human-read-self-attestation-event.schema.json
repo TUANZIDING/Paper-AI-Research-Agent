@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/human-read-self-attestation-event.schema.json",
+  "title": "Identity-unverified human-read self-attestation event",
+  "type": "object",
+  "required": [
+    "schema_version", "event_type", "recorded_at", "actor_type",
+    "attestation_method", "identity_verified", "reviewer_role",
+    "material_path", "material_sha256", "confirmation_statement",
+    "previous_event_hash", "event_hash"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_type": {"const": "HUMAN_READ_SELF_ATTESTED"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "actor_type": {"const": "claimed_human"},
+    "attestation_method": {"const": "unverified_cli_claim"},
+    "identity_verified": {"const": false},
+    "reviewer_role": {"type": "string", "pattern": "^anonymous_[a-z0-9]+(?:_[a-z0-9]+)*$", "maxLength": 80},
+    "material_path": {"type": "string", "pattern": "^/"},
+    "material_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "confirmation_statement": {"type": "string", "minLength": 10},
+    "previous_event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

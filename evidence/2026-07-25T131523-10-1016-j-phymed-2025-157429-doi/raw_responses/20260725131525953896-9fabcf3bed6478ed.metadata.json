@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T13:15:25.953896+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Host": "eutils.ncbi.nlm.nih.gov"
+    },
+    "method": "GET",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?tool=ai_research_agent&db=pubmed&retmode=json&retstart=0&retmax=2&term=10.1016%2Fj.phymed.2025.157429%5Bdoi%5D"
+  },
+  "response": {
+    "body_file": "20260725131525953896-9fabcf3bed6478ed.response",
+    "byte_length": 214,
+    "sha256": "9fabcf3bed6478eda712fa3f9ee16373261934c24794f1aa69beb681cb97ed03"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,19 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T13:27:21.093463+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Host": "api.crossref.org"
+    },
+    "method": "GET",
+    "url": "https://api.crossref.org/works/10.1016%2Fj.phymed.2025.157429"
+  },
+  "response": {
+    "body_file": "20260725132721093463-c773b63f320186d6.response",
+    "byte_length": 22163,
+    "sha256": "c773b63f320186d69ec0ccbb7b3b129486953c52cc347039385fb32eb7d27aba"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,18 @@
+{
+  "error": null,
+  "fetched_at": "2026-07-25T22:37:56.291118+00:00",
+  "http_status": 200,
+  "request": {
+    "headers": {
+      "Accept": "application/json"
+    },
+    "method": "GET",
+    "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?tool=ai_research_agent&db=pubmed&retmode=json&retmax=0&term=10.1177%2F1758835920922055%5Bdoi%5D&usehistory=y"
+  },
+  "response": {
+    "body_file": "20260725223756291118-55f8e166af44318d.response",
+    "byte_length": 256,
+    "sha256": "55f8e166af44318d8c23bfb65a6b4c7f2e2e9fc4d136f422257d780b75541c6b"
+  },
+  "schema_version": 1
+}

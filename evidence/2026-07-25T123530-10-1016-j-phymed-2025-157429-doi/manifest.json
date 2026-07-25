@@ -1,0 +1,25 @@
+{
+  "schema_version": "0.1",
+  "started_at": "2026-07-25T12:35:30.547827+00:00",
+  "completed_at": "2026-07-25T12:35:36.446980+00:00",
+  "query": "10.1016/j.phymed.2025.157429[doi]",
+  "requested_limit_per_source": 5,
+  "source_totals": {
+    "pubmed": 1,
+    "europe_pmc": 1
+  },
+  "source_queries": {
+    "pubmed": "10.1016/j.phymed.2025.157429[doi]",
+    "europe_pmc": "DOI:10.1016/j.phymed.2025.157429"
+  },
+  "returned_after_deduplication": 1,
+  "citation_ready": 1,
+  "partial": false,
+  "issues": [],
+  "output_sha256": {
+    "records.jsonl": "918126c3299b2ce2ee654db285889028925827382430397935f85316d9fbd8dd",
+    "report.md": "cb090742ad947f5667e0d3bf399ee4cb6db2fa0d8745288873150a05bf5716c9"
+  },
+  "scope_statement": "This run searched selected open APIs only. It is not equivalent to Embase, Scopus, or Web of Science coverage.",
+  "integrity_statement": "Citation-ready means identifier/metadata verification passed in this run; it does not mean the full text was human-read or the study quality was appraised."
+}

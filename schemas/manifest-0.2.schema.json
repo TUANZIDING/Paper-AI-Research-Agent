@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/manifest-0.2.schema.json",
+  "title": "AI Research Agent run manifest 0.2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "started_at",
+    "completed_at",
+    "query",
+    "requested_limit_per_source",
+    "source_totals",
+    "source_queries",
+    "source_pagination",
+    "search_complete",
+    "returned_after_deduplication",
+    "citation_ready",
+    "partial",
+    "issues",
+    "output_sha256",
+    "scope_statement",
+    "integrity_statement"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.2"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "query": {"type": "string", "minLength": 1},
+    "requested_limit_per_source": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "source_totals": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "source_queries": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "source_pagination": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/pagination"}
+    },
+    "search_complete": {"type": "boolean"},
+    "returned_after_deduplication": {"type": "integer", "minimum": 0},
+    "citation_ready": {"type": "integer", "minimum": 0},
+    "partial": {"type": "boolean"},
+    "issues": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/issue"}
+    },
+    "output_sha256": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "scope_statement": {"type": "string", "minLength": 1},
+    "integrity_statement": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "pagination": {
+      "type": "object",
+      "required": [
+        "state",
+        "total_available",
+        "records_returned",
+        "pages_fetched",
+        "max_records",
+        "errors"
+      ],
+      "properties": {
+        "state": {"enum": ["complete", "truncated", "partial"]},
+        "total_available": {"type": "integer", "minimum": 0},
+        "records_returned": {"type": "integer", "minimum": 0},
+        "pages_fetched": {"type": "integer", "minimum": 0},
+        "max_records": {"type": ["integer", "null"], "minimum": 1},
+        "errors": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "issue": {
+      "type": "object",
+      "required": ["source", "stage", "message", "fatal"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "fatal": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

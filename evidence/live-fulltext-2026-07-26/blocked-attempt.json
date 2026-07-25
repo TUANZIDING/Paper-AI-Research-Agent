@@ -1,0 +1,12 @@
+{
+  "attempted_at": "2026-07-25T23:07:15Z",
+  "source": "Europe PMC official fullTextXML endpoint",
+  "pmcid": "PMC12967033",
+  "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC12967033/fullTextXML",
+  "declared_license": "https://creativecommons.org/licenses/by/4.0/",
+  "declared_version": "publishedVersion",
+  "download_completed": false,
+  "block_reason": "DNS answer contains a private, local, reserved, or non-global address.",
+  "safety_boundary": "The current execution environment resolves the public host through non-global proxy addresses. The SSRF gate was not weakened, so no full text was written.",
+  "final_legal_judgment": false
+}
