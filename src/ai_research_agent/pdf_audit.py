@@ -10,7 +10,10 @@ import re
 import unicodedata
 from typing import Iterable
 
-from pypdf import PdfReader
+try:
+    from pypdf import PdfReader
+except ImportError:  # Keep non-PDF commands usable in offline/minimal environments.
+    PdfReader = None  # type: ignore[assignment]
 
 from .models import Publication, normalize_doi, normalize_title
 from .pipeline import ResearchPipeline
@@ -169,6 +172,10 @@ def extract_pdf_references(
     payload = path.read_bytes()
     if not payload.startswith(b"%PDF-"):
         raise PdfReferenceAuditError("Input is not a PDF file")
+    if PdfReader is None:
+        raise PdfReferenceAuditError(
+            "PDF extraction requires pypdf; install the project dependencies first"
+        )
     try:
         reader = PdfReader(path, strict=False)
         if reader.is_encrypted:

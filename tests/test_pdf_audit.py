@@ -13,6 +13,7 @@ from ai_research_agent.cli import main
 from ai_research_agent.models import Publication
 from ai_research_agent.pdf_audit import (
     ParsedReference,
+    PdfReferenceAuditError,
     extract_pdf_references,
     score_candidate,
     write_pdf_audit,
@@ -60,6 +61,13 @@ class PdfAuditTests(unittest.TestCase):
         self.assertEqual(result.uncited_reference_numbers, ())
         self.assertEqual(result.dangling_citation_numbers, ())
         self.assertEqual(result.references[0].title, "First finding")
+
+    def test_missing_pdf_dependency_fails_only_when_extraction_is_requested(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._fake_pdf(Path(directory))
+            with patch("ai_research_agent.pdf_audit.PdfReader", None):
+                with self.assertRaisesRegex(PdfReferenceAuditError, "requires pypdf"):
+                    extract_pdf_references(path)
 
     def test_candidate_scoring_rejects_same_title_wrong_author_and_year(self):
         reference = ParsedReference(
