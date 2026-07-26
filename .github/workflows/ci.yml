@@ -40,6 +40,9 @@ jobs:
           "$RUNNER_TEMP/release-venv/bin/research-agent" --help
           "$RUNNER_TEMP/release-venv/bin/research-agent" search --help
           "$RUNNER_TEMP/release-venv/bin/research-agent" verify-run --help
+          "$RUNNER_TEMP/release-venv/bin/research-agent" audit-pdf-references --help
+          timeout 30s "$RUNNER_TEMP/release-venv/bin/python" -m unittest \
+            tests.test_pdf_real_integration -v
       - name: Whitespace check
         run: git diff --check
 

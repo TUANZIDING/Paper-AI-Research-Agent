@@ -4,6 +4,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
 import hashlib
+from importlib.metadata import PackageNotFoundError, version
 import json
 from pathlib import Path
 import re
@@ -62,6 +63,7 @@ class PdfExtraction:
     byte_length: int
     page_count: int
     reference_heading_page: int
+    page_text_sha256: tuple[str, ...]
     references: tuple[ParsedReference, ...]
     citations: tuple[CitationOccurrence, ...]
     dangling_citation_numbers: tuple[int, ...]
@@ -83,6 +85,12 @@ def _clean_text(value: str) -> str:
     value = unicodedata.normalize("NFKC", value)
     value = value.replace("ﬁ", "fi").replace("ﬂ", "fl")
     value = re.sub(r"(?<=\w)-\s*\n\s*(?=\w)", "", value)
+    # Repair a common PDF extraction artifact such as ``20 0 0;49(6)``.
+    value = re.sub(
+        r"\b((?:19|20))\s+(\d)\s+(\d)(?=\s*[;,.])",
+        lambda match: "".join(match.groups()),
+        value,
+    )
     value = re.sub(r"[ \t]+", " ", value)
     value = re.sub(r"\s*\n\s*", " ", value)
     return " ".join(value.split())
@@ -112,7 +120,30 @@ def _strip_page_noise(text: str) -> str:
     text = re.sub(r"(?im)^\s*https?://doi\.org/\S+\s*$", "", text)
     text = re.sub(r"(?im)^\s*article in press\s*$", "", text)
     text = re.sub(r"(?im)^\s*jid:.*$", "", text)
+    text = re.sub(r"(?im)^\s*\d+\s+.*?/.*$", "", text, count=1)
     return text
+
+
+def _find_reference_heading(pages: list[str]) -> tuple[int, int]:
+    """Find a heading whose next numbered entry is reference 1.
+
+    This rejects table-of-contents mentions of "References" and repeated
+    running headers on continuation pages.
+    """
+
+    for page_index, text in enumerate(pages):
+        for heading in _REFERENCE_HEADING.finditer(text):
+            window = text[heading.end() :]
+            marker = _REFERENCE_MARKER.search(window)
+            if marker is not None and int(marker.group(1)) == 1:
+                return page_index, heading.end()
+            if page_index + 1 < len(pages):
+                next_marker = _REFERENCE_MARKER.search(_strip_page_noise(pages[page_index + 1]))
+                if next_marker is not None and int(next_marker.group(1)) == 1:
+                    return page_index, heading.end()
+    raise PdfReferenceAuditError(
+        "Numbered reference section not found; V1 requires a heading followed by [1]"
+    )
 
 
 def _parse_reference(number: int, raw: str, page: int) -> ParsedReference:
@@ -120,7 +151,9 @@ def _parse_reference(number: int, raw: str, page: int) -> ParsedReference:
     doi_match = _DOI.search(cleaned)
     doi = normalize_doi(doi_match.group(1)) if doi_match else None
     year_matches = list(_YEAR.finditer(cleaned))
-    year = int(year_matches[-1].group(1)) if year_matches else None
+    publication_year = re.search(r"\b((?:19|20)\d{2})\s*;", cleaned)
+    selected_year = publication_year or (year_matches[0] if year_matches else None)
+    year = int(selected_year.group(1)) if selected_year else None
 
     first_period = cleaned.find(".")
     authors_part = cleaned[:first_period] if first_period >= 0 else cleaned
@@ -132,13 +165,13 @@ def _parse_reference(number: int, raw: str, page: int) -> ParsedReference:
     if first_period >= 0:
         remainder = cleaned[first_period + 1 :].strip()
         boundary = None
-        if year_matches:
-            year_start = year_matches[-1].start()
+        if selected_year:
+            year_start = selected_year.start()
             before_year = cleaned[:year_start]
             boundary = before_year.rfind(".")
         if boundary is not None and boundary > first_period:
             title = cleaned[first_period + 1 : boundary].strip(" .") or None
-            journal = cleaned[boundary + 1 : (year_matches[-1].start() if year_matches else len(cleaned))].strip(" .;,") or None
+            journal = cleaned[boundary + 1 : selected_year.start()].strip(" .;,") or None
         else:
             second_period = remainder.find(".")
             if second_period >= 0:
@@ -190,50 +223,44 @@ def extract_pdf_references(
     if not any(text.strip() for text in pages):
         raise PdfReferenceAuditError("PDF has no extractable text; OCR is required")
 
-    heading_page = -1
-    heading_end = -1
-    for index, text in enumerate(pages):
-        match = _REFERENCE_HEADING.search(text)
-        if match:
-            heading_page = index
-            heading_end = match.end()
-            break
-    if heading_page < 0:
-        raise PdfReferenceAuditError(
-            "Numbered reference section not found; this V1 supports explicit References/Bibliography headings"
-        )
+    heading_page, heading_end = _find_reference_heading(pages)
 
     reference_chunks: list[tuple[int, str]] = []
     for page_index in range(heading_page, len(pages)):
         page_text = pages[page_index]
         if page_index == heading_page:
             page_text = page_text[heading_end:]
-        else:
-            first_marker = _REFERENCE_MARKER.search(page_text)
-            if first_marker:
-                page_text = page_text[first_marker.start() :]
         reference_chunks.append((page_index + 1, _strip_page_noise(page_text)))
 
-    marker_records: list[tuple[int, int, int, str]] = []
+    marker_records: list[tuple[int, int, str]] = []
+    current_number: int | None = None
+    current_page: int | None = None
+    current_parts: list[str] = []
     for page_number, text in reference_chunks:
         matches = list(_REFERENCE_MARKER.finditer(text))
+        prefix_end = matches[0].start() if matches else len(text)
+        if current_number is not None:
+            current_parts.append(text[:prefix_end])
         for index, match in enumerate(matches):
+            if current_number is not None:
+                marker_records.append(
+                    (current_number, current_page or page_number, " ".join(current_parts))
+                )
+            current_number = int(match.group(1))
+            current_page = page_number
             end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-            marker_records.append((int(match.group(1)), page_number, index, text[match.end() : end]))
+            current_parts = [text[match.end() : end]]
+    if current_number is not None:
+        marker_records.append(
+            (current_number, current_page or heading_page + 1, " ".join(current_parts))
+        )
     if not marker_records:
         raise PdfReferenceAuditError("No numbered [n] references found")
 
-    merged: list[ParsedReference] = []
-    for number, page_number, marker_index, raw in marker_records:
-        # A page-ending reference can continue before the first marker on the next page.
-        if marker_index == len(list(_REFERENCE_MARKER.finditer(reference_chunks[page_number - heading_page - 1][1]))) - 1:
-            next_page_offset = page_number - heading_page
-            if next_page_offset < len(reference_chunks):
-                next_text = reference_chunks[next_page_offset][1]
-                next_marker = _REFERENCE_MARKER.search(next_text)
-                if next_marker and next_marker.start() > 0:
-                    raw += " " + next_text[: next_marker.start()]
-        merged.append(_parse_reference(number, raw, page_number))
+    merged = [
+        _parse_reference(number, raw, page_number)
+        for number, page_number, raw in marker_records
+    ]
 
     numbers = [item.number for item in merged]
     if len(numbers) != len(set(numbers)):
@@ -267,6 +294,9 @@ def extract_pdf_references(
         byte_length=size,
         page_count=len(pages),
         reference_heading_page=heading_page + 1,
+        page_text_sha256=tuple(
+            _sha256_bytes(text.encode("utf-8")) for text in pages
+        ),
         references=tuple(merged),
         citations=tuple(citations),
         dangling_citation_numbers=tuple(sorted(citation_numbers - reference_numbers)),
@@ -276,7 +306,8 @@ def extract_pdf_references(
 
 def _name_token(value: str | None) -> str:
     normalized = unicodedata.normalize("NFKD", value or "").casefold()
-    return "".join(re.findall(r"[a-z0-9]+", normalized))
+    tokens = re.findall(r"[a-z0-9]+", normalized)
+    return tokens[0] if tokens else ""
 
 
 def _similarity(left: str | None, right: str | None) -> float | None:
@@ -292,7 +323,7 @@ def score_candidate(reference: ParsedReference, candidate: Publication) -> Candi
     if reference.first_author and candidate_author:
         left = _name_token(reference.first_author)
         right = _name_token(candidate_author)
-        author_score = 1.0 if left and (left in right or right in left) else 0.0
+        author_score = 1.0 if left and left == right else 0.0
     year_score = None
     if reference.year is not None and candidate.year is not None:
         year_score = 1.0 if reference.year == candidate.year else 0.0
@@ -333,9 +364,16 @@ def score_candidate(reference: ParsedReference, candidate: Publication) -> Candi
     has_conflict = (
         author_score == 0.0
         or year_score == 0.0
-        or (journal_score is not None and journal_score < 0.50)
+        or (journal_score is not None and journal_score < 0.25)
     )
-    if doi_exact or (
+    identifier_conflict = doi_exact and (
+        title_score < 0.72
+        or author_score == 0.0
+        or year_score == 0.0
+    )
+    if identifier_conflict:
+        decision = "identifier_metadata_conflict"
+    elif doi_exact or (
         score >= 0.86
         and title_score >= 0.88
         and corroborating >= 2
@@ -366,19 +404,15 @@ def lookup_reference(
     limit: int = 5,
     transport_mode: str = "network",
     cache_enabled: bool = False,
-) -> tuple[list[dict], list[dict], list[dict[str, str]]]:
+) -> tuple[list[dict], list[dict], list[dict[str, object]], dict[str, object]]:
     query_title = _clean_text(reference.title or reference.raw)
+    query_title = re.sub(r"(?<=\d)(vs)(?=\s|\d)", r" \1 ", query_title, flags=re.I)
     query_title = " ".join(re.sub(r'[\[\]"]', " ", query_title).split())[:500]
     publications: dict[str, Publication] = {}
     issues: list[dict] = []
-    queries: list[dict[str, str]] = []
-    for source in sources:
-        query = (
-            f"{query_title}[Title]"
-            if source == "pubmed"
-            else f'TITLE:"{query_title}"'
-        )
-        queries.append({"source": source, "query": query})
+    queries: list[dict[str, object]] = []
+
+    def execute(source: str, query: str, strategy: str) -> None:
         run = pipeline.run(
             query,
             limit,
@@ -387,9 +421,66 @@ def lookup_reference(
             transport_mode=transport_mode,
             cache_enabled=cache_enabled,
         )
+        pagination = run.source_pagination.get(source, {})
+        queries.append(
+            {
+                "source": source,
+                "strategy": strategy,
+                "query": query,
+                "source_total": run.source_totals.get(source),
+                "pagination_state": pagination.get("state", "missing"),
+                "records_returned": pagination.get("records_returned"),
+                "pages_fetched": pagination.get("pages_fetched"),
+            }
+        )
         issues.extend(issue.to_dict() for issue in run.issues)
         for publication in run.publications:
             publications.setdefault(publication.dedupe_key, publication)
+
+    def has_high_confidence() -> bool:
+        return any(
+            score_candidate(reference, publication).decision
+            == "matched_high_confidence"
+            for publication in publications.values()
+        )
+
+    if "pubmed" in sources:
+        execute("pubmed", f"{query_title}[Title]", "title")
+    if (
+        "pubmed" in sources
+        and not has_high_confidence()
+        and reference.first_author
+        and reference.year
+    ):
+        execute(
+            "pubmed",
+            f"{reference.first_author}[Author] AND {query_title}[Title] AND {reference.year}[dp]",
+            "author_title_year",
+        )
+    acronyms = re.findall(r"\b[A-Z][A-Z0-9]{3,}\b", reference.title or "")
+    planned_queries: set[tuple[str, str]] = set()
+    if "pubmed" in sources:
+        planned_queries.add(("pubmed", "title"))
+        if reference.first_author and reference.year:
+            planned_queries.add(("pubmed", "author_title_year"))
+            if acronyms:
+                planned_queries.add(("pubmed", "author_acronym_year"))
+    if "europe_pmc" in sources:
+        planned_queries.add(("europe_pmc", "title"))
+    if (
+        "pubmed" in sources
+        and not has_high_confidence()
+        and reference.first_author
+        and reference.year
+        and acronyms
+    ):
+        execute(
+            "pubmed",
+            f"{reference.first_author}[Author] AND {acronyms[0]}[Title] AND {reference.year}[dp]",
+            "author_acronym_year",
+        )
+    if "europe_pmc" in sources and not has_high_confidence():
+        execute("europe_pmc", f'TITLE:"{query_title}"', "title")
     ranked = sorted(
         ((score_candidate(reference, item), item) for item in publications.values()),
         key=lambda pair: pair[0].score,
@@ -399,7 +490,32 @@ def lookup_reference(
         {"score": asdict(score), "publication": item.to_dict()}
         for score, item in ranked[:limit]
     ]
-    return candidates, issues, queries
+    best_decision = candidates[0]["score"]["decision"] if candidates else None
+    identity_resolved = best_decision == "matched_high_confidence"
+    states = [str(item.get("pagination_state")) for item in queries]
+    executed_queries = {
+        (str(item.get("source")), str(item.get("strategy"))) for item in queries
+    }
+    planned_queries_executed = executed_queries == planned_queries
+    search_complete = (
+        bool(states)
+        and planned_queries_executed
+        and all(state == "complete" for state in states)
+    )
+    lookup_status = (
+        "completed"
+        if identity_resolved or search_complete
+        else ("failed" if states and all(state == "missing" for state in states) else "partial")
+    )
+    coverage = {
+        "execution_status": lookup_status,
+        "search_complete": search_complete,
+        "identity_resolved": identity_resolved,
+        "pagination_states": states,
+        "planned_queries_executed": planned_queries_executed,
+        "candidate_exhaustion_proven": search_complete,
+    }
+    return candidates, issues, queries, coverage
 
 
 def write_pdf_audit(
@@ -408,9 +524,11 @@ def write_pdf_audit(
     *,
     lookups: dict[int, dict] | None = None,
     started_at: str | None = None,
+    lookup_policy: dict[str, object] | None = None,
+    lookup_batch: dict[str, object] | None = None,
 ) -> Path:
     started_at = started_at or datetime.now(timezone.utc).isoformat()
-    timestamp = started_at.replace(":", "").replace("+", "-").split(".")[0]
+    timestamp = started_at.replace(":", "").replace("+", "-").replace(".", "")
     slug = re.sub(r"[^A-Za-z0-9]+", "-", Path(extraction.source_path).stem).strip("-")[:40] or "pdf"
     run_dir = Path(output_root).expanduser().resolve() / f"{timestamp}-{slug}"
     run_dir.mkdir(parents=True, exist_ok=False)
@@ -428,6 +546,12 @@ def write_pdf_audit(
                     "queries": [],
                     "candidates": [],
                     "issues": [],
+                    "execution_status": "pending",
+                    "match_status": None,
+                    "search_complete": False,
+                    "identity_resolved": False,
+                    "pagination_states": [],
+                    "candidate_exhaustion_proven": False,
                 }
             payload = {
                 "reference": asdict(reference),
@@ -448,6 +572,18 @@ def write_pdf_audit(
         "high_confidence_match_count": sum(
             1 for value in (lookups or {}).values()
             if value.get("candidates") and value["candidates"][0]["score"]["decision"] == "matched_high_confidence"
+        ),
+        "lookup_completed_count": sum(
+            value.get("execution_status") == "completed"
+            for value in (lookups or {}).values()
+        ),
+        "lookup_partial_count": sum(
+            value.get("execution_status") == "partial"
+            for value in (lookups or {}).values()
+        ),
+        "lookup_failed_count": sum(
+            value.get("execution_status") == "failed"
+            for value in (lookups or {}).values()
         ),
     }
     citation_map = {
@@ -489,17 +625,35 @@ def write_pdf_audit(
         for path in sorted(run_dir.rglob("*"))
         if path.is_file() and path.name != "manifest.json"
     }
+    try:
+        pypdf_version = version("pypdf")
+    except PackageNotFoundError:
+        pypdf_version = "unavailable"
     manifest = {
         "schema_version": "pdf-reference-audit-0.1",
         "run_type": "pdf_reference_audit",
         "started_at": started_at,
-        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "artifact_completed_at": datetime.now(timezone.utc).isoformat(),
         "source_pdf": {
-            "path": extraction.source_path,
+            "name": Path(extraction.source_path).name,
             "sha256": extraction.source_sha256,
             "byte_length": extraction.byte_length,
             "page_count": extraction.page_count,
+            "source_material_archived": False,
         },
+        "derivation": {
+            "extractor": "pypdf",
+            "extractor_version": pypdf_version,
+            "policy_version": "pdf-reference-audit-0.2",
+            "page_text_sha256": list(extraction.page_text_sha256),
+        },
+        "lookup_policy": lookup_policy or {
+            "lookup_enabled": False,
+            "transport_mode": "none",
+            "sources": [],
+            "selected_reference_numbers": [],
+        },
+        "lookup_batch": lookup_batch,
         "summary": summary,
         "output_sha256": hashes,
         "human_adjudicated": False,

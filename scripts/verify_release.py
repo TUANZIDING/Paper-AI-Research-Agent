@@ -65,6 +65,25 @@ def validate_json_schema(
         target = _resolve_pointer(root, schema["$ref"])
         validate_json_schema(value, target, root_schema=root, path=path)
         return
+    for index, subschema in enumerate(schema.get("allOf", [])):
+        if not isinstance(subschema, dict):
+            raise SchemaValidationError(f"{path}: invalid allOf schema at index {index}")
+        validate_json_schema(
+            value, subschema, root_schema=root, path=path
+        )
+    conditional = schema.get("if")
+    if conditional is not None:
+        if not isinstance(conditional, dict):
+            raise SchemaValidationError(f"{path}: invalid if schema")
+        try:
+            validate_json_schema(value, conditional, root_schema=root, path=path)
+            branch = schema.get("then")
+        except SchemaValidationError:
+            branch = schema.get("else")
+        if branch is not None:
+            if not isinstance(branch, dict):
+                raise SchemaValidationError(f"{path}: invalid conditional branch")
+            validate_json_schema(value, branch, root_schema=root, path=path)
     if "const" in schema and value != schema["const"]:
         raise SchemaValidationError(f"{path}: expected const {schema['const']!r}")
     if "enum" in schema and value not in schema["enum"]:
@@ -79,6 +98,10 @@ def validate_json_schema(
             raise SchemaValidationError(f"{path}: expected type {choices!r}")
 
     if isinstance(value, dict):
+        if len(value) < schema.get("minProperties", 0):
+            raise SchemaValidationError(f"{path}: object has too few properties")
+        if "maxProperties" in schema and len(value) > schema["maxProperties"]:
+            raise SchemaValidationError(f"{path}: object has too many properties")
         required = schema.get("required", [])
         missing = [name for name in required if name not in value]
         if missing:
@@ -96,11 +119,23 @@ def validate_json_schema(
                 validate_json_schema(
                     item, additional, root_schema=root, path=f"{path}.{key}"
                 )
-    if isinstance(value, list) and isinstance(schema.get("items"), dict):
-        for index, item in enumerate(value):
-            validate_json_schema(
-                item, schema["items"], root_schema=root, path=f"{path}[{index}]"
-            )
+    if isinstance(value, list):
+        if len(value) < schema.get("minItems", 0):
+            raise SchemaValidationError(f"{path}: array has too few items")
+        if "maxItems" in schema and len(value) > schema["maxItems"]:
+            raise SchemaValidationError(f"{path}: array has too many items")
+        if schema.get("uniqueItems"):
+            canonical_items = [
+                json.dumps(item, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                for item in value
+            ]
+            if len(canonical_items) != len(set(canonical_items)):
+                raise SchemaValidationError(f"{path}: array items are not unique")
+        if isinstance(schema.get("items"), dict):
+            for index, item in enumerate(value):
+                validate_json_schema(
+                    item, schema["items"], root_schema=root, path=f"{path}[{index}]"
+                )
     if isinstance(value, str):
         if len(value) < schema.get("minLength", 0):
             raise SchemaValidationError(f"{path}: string is too short")
@@ -312,6 +347,186 @@ def _check_record_semantics(
     return errors
 
 
+def _check_pdf_audit_manifest_semantics(
+    manifest: dict[str, Any], path: str | Path
+) -> list[str]:
+    """Check cross-field rules that the repository's JSON Schema cannot express."""
+
+    label = str(path)
+    errors: list[str] = []
+    source = manifest.get("source_pdf")
+    derivation = manifest.get("derivation")
+    lookup = manifest.get("lookup_policy")
+    lookup_batch = manifest.get("lookup_batch")
+    summary = manifest.get("summary")
+    outputs = manifest.get("output_sha256")
+    if not all(
+        isinstance(value, dict)
+        for value in (source, derivation, lookup, summary, outputs)
+    ):
+        return [f"{label}: PDF audit manifest sections are not objects"]
+
+    source_name = source.get("name")
+    if (
+        not isinstance(source_name, str)
+        or Path(source_name).name != source_name
+        or "/" in source_name
+        or "\\" in source_name
+    ):
+        errors.append(f"{label}: source_pdf.name must not contain a path")
+    page_count = source.get("page_count")
+    page_hashes = derivation.get("page_text_sha256")
+    if (
+        isinstance(page_count, int)
+        and isinstance(page_hashes, list)
+        and len(page_hashes) != page_count
+    ):
+        errors.append(
+            f"{label}: derivation.page_text_sha256 count does not match source page_count"
+        )
+
+    required_outputs = {
+        "reference_results.jsonl",
+        "citation_map.json",
+        "report.md",
+    }
+    missing_outputs = required_outputs - set(outputs)
+    if missing_outputs:
+        errors.append(
+            f"{label}: required PDF audit outputs missing: {sorted(missing_outputs)!r}"
+        )
+
+    lookup_enabled = lookup.get("lookup_enabled")
+    transport_mode = lookup.get("transport_mode")
+    sources = lookup.get("sources")
+    selected = lookup.get("selected_reference_numbers")
+    checkpoint_sha256 = lookup.get("checkpoint_sha256")
+    if lookup_enabled is True:
+        if not isinstance(lookup_batch, dict):
+            errors.append(f"{label}: enabled lookup requires lookup_batch metadata")
+        if not isinstance(sources, list) or not sources:
+            errors.append(f"{label}: enabled lookup requires at least one source")
+        if not isinstance(selected, list) or not selected:
+            errors.append(f"{label}: enabled lookup requires selected references")
+        if transport_mode not in {"network", "offline_replay"}:
+            errors.append(f"{label}: enabled lookup has invalid transport mode")
+        if lookup.get("cache_enabled") is not True and transport_mode == "offline_replay":
+            errors.append(f"{label}: offline replay requires cache_enabled=true")
+        archived_checkpoint = outputs.get("batch_checkpoint.jsonl")
+        if (
+            not isinstance(checkpoint_sha256, str)
+            or archived_checkpoint != checkpoint_sha256
+        ):
+            errors.append(
+                f"{label}: checkpoint_sha256 must match archived batch_checkpoint.jsonl"
+            )
+    elif lookup_enabled is False:
+        if lookup_batch is not None:
+            errors.append(f"{label}: disabled lookup requires lookup_batch=null")
+        if transport_mode != "none" or sources != [] or selected != []:
+            errors.append(
+                f"{label}: disabled lookup must use transport none and empty source/selection lists"
+            )
+        if checkpoint_sha256 is not None or "batch_checkpoint.jsonl" in outputs:
+            errors.append(f"{label}: disabled lookup cannot contain a batch checkpoint")
+
+    count_names = (
+        "reference_count",
+        "cited_reference_count",
+        "citation_occurrence_count",
+        "lookup_attempted_count",
+        "high_confidence_match_count",
+        "lookup_completed_count",
+        "lookup_partial_count",
+        "lookup_failed_count",
+    )
+    if all(
+        isinstance(summary.get(name), int) and not isinstance(summary.get(name), bool)
+        for name in count_names
+    ):
+        reference_count = summary["reference_count"]
+        attempted = summary["lookup_attempted_count"]
+        terminal = (
+            summary["lookup_completed_count"]
+            + summary["lookup_partial_count"]
+            + summary["lookup_failed_count"]
+        )
+        if summary["cited_reference_count"] > reference_count:
+            errors.append(f"{label}: cited reference count exceeds reference count")
+        if attempted != terminal:
+            errors.append(
+                f"{label}: lookup attempted count does not equal terminal batch counts"
+            )
+        if summary["high_confidence_match_count"] > attempted:
+            errors.append(
+                f"{label}: high-confidence match count exceeds attempted lookups"
+            )
+        if isinstance(selected, list) and attempted > len(selected):
+            errors.append(f"{label}: attempted lookup count exceeds selected references")
+        if lookup_enabled is False and attempted != 0:
+            errors.append(f"{label}: disabled lookup cannot report attempted lookups")
+
+    if isinstance(lookup_batch, dict):
+        batch_counts = {
+            name: lookup_batch.get(name)
+            for name in (
+                "selected_count",
+                "attempted_this_run",
+                "completed_count",
+                "partial_count",
+                "failed_count",
+                "pending_count",
+            )
+        }
+        if all(
+            isinstance(value, int) and not isinstance(value, bool)
+            for value in batch_counts.values()
+        ):
+            selected_count = batch_counts["selected_count"]
+            classified_count = sum(
+                batch_counts[name]
+                for name in (
+                    "completed_count",
+                    "partial_count",
+                    "failed_count",
+                    "pending_count",
+                )
+            )
+            if isinstance(selected, list) and selected_count != len(selected):
+                errors.append(
+                    f"{label}: lookup_batch selected_count does not match selected references"
+                )
+            if classified_count != selected_count:
+                errors.append(
+                    f"{label}: lookup_batch outcome counts do not equal selected_count"
+                )
+            if batch_counts["attempted_this_run"] > selected_count:
+                errors.append(
+                    f"{label}: lookup_batch attempted_this_run exceeds selected_count"
+                )
+            for summary_name, batch_name in (
+                ("lookup_completed_count", "completed_count"),
+                ("lookup_partial_count", "partial_count"),
+                ("lookup_failed_count", "failed_count"),
+            ):
+                if summary.get(summary_name) != batch_counts[batch_name]:
+                    errors.append(
+                        f"{label}: summary {summary_name} does not match lookup_batch {batch_name}"
+                    )
+            expected_status = "partial"
+            if batch_counts["completed_count"] == selected_count:
+                expected_status = "completed"
+            elif batch_counts["pending_count"] == selected_count:
+                expected_status = "pending"
+            elif batch_counts["failed_count"] == selected_count:
+                expected_status = "failed"
+            if lookup_batch.get("batch_status") != expected_status:
+                errors.append(
+                    f"{label}: lookup_batch batch_status is inconsistent with outcome counts"
+                )
+    return errors
+
+
 def verify_release(root: Path) -> list[str]:
     root = root.resolve()
     errors: list[str] = []
@@ -332,6 +547,7 @@ def verify_release(root: Path) -> list[str]:
         "record.schema.json", "record-0.3.schema.json",
         "human-read-self-attestation-event.schema.json",
         "claim-evidence.schema.json", "external-review-packet.schema.json",
+        "pdf-reference-audit-0.1.schema.json",
     }
     missing = required_schemas - set(schemas)
     if missing:
@@ -346,25 +562,38 @@ def verify_release(root: Path) -> list[str]:
         errors.append(f"cannot import release package: {exc}")
         verify_run = None
 
-    for manifest_path in sorted((root / "evidence").glob("*/manifest.json")):
+    for manifest_path in sorted((root / "evidence").rglob("manifest.json")):
         run_dir = manifest_path.parent
         if verify_run is not None:
             result = verify_run(run_dir)
             if not result.valid:
                 errors.append(f"{run_dir}: verify-run failed: {list(result.errors)!r}")
+        version = None
         try:
             manifest = load_json(manifest_path)
             version = manifest.get("schema_version")
-            schema = schemas.get(f"manifest-{version}.schema.json")
+            schema_name = (
+                "pdf-reference-audit-0.1.schema.json"
+                if version == "pdf-reference-audit-0.1"
+                else f"manifest-{version}.schema.json"
+            )
+            schema = schemas.get(schema_name)
             if schema is not None:
                 validate_json_schema(manifest, schema)
+                if version == "pdf-reference-audit-0.1":
+                    errors.extend(
+                        _check_pdf_audit_manifest_semantics(manifest, manifest_path)
+                    )
             elif version != "0.1":
                 errors.append(f"{manifest_path}: unsupported manifest schema {version!r}")
         except (OSError, UnicodeError, json.JSONDecodeError, SchemaValidationError) as exc:
             errors.append(f"{manifest_path}: {exc}")
-            version = None
-        record_schema = schemas.get(
-            "record-0.3.schema.json" if version == "0.3" else "record.schema.json"
+        record_schema = (
+            None
+            if version == "pdf-reference-audit-0.1"
+            else schemas.get(
+                "record-0.3.schema.json" if version == "0.3" else "record.schema.json"
+            )
         )
         archived_response_hashes: set[str] = set()
         if version == "0.3":

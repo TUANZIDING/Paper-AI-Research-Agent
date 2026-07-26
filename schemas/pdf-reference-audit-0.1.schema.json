@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-research-agent/schemas/pdf-reference-audit-0.1.schema.json",
+  "title": "PDF reference audit manifest 0.1",
+  "type": "object",
+  "required": [
+    "schema_version", "run_type", "started_at", "artifact_completed_at", "source_pdf",
+    "derivation", "lookup_policy", "lookup_batch", "summary", "output_sha256",
+    "human_adjudicated", "semantic_support_assessed",
+    "coverage_equivalent_to_subscription_indexes"
+  ],
+  "properties": {
+    "schema_version": {"const": "pdf-reference-audit-0.1"},
+    "run_type": {"const": "pdf_reference_audit"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "artifact_completed_at": {"type": "string", "format": "date-time"},
+    "source_pdf": {
+      "type": "object",
+      "required": ["name", "sha256", "byte_length", "page_count", "source_material_archived"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "page_count": {"type": "integer", "minimum": 1},
+        "source_material_archived": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "derivation": {
+      "type": "object",
+      "required": ["extractor", "extractor_version", "policy_version", "page_text_sha256"],
+      "properties": {
+        "extractor": {"const": "pypdf"},
+        "extractor_version": {"type": "string", "minLength": 1},
+        "policy_version": {"const": "pdf-reference-audit-0.2"},
+        "page_text_sha256": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "lookup_policy": {
+      "type": "object",
+      "required": ["lookup_enabled", "transport_mode", "sources", "selected_reference_numbers"],
+      "properties": {
+        "lookup_enabled": {"type": "boolean"},
+        "transport_mode": {"enum": ["none", "network", "offline_replay"]},
+        "sources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["pubmed", "europe_pmc"]}
+        },
+        "selected_reference_numbers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "limit_per_reference": {"type": "integer", "minimum": 1, "maximum": 20},
+        "cache_enabled": {"type": "boolean"},
+        "checkpoint_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": ["lookup_enabled"],
+            "properties": {"lookup_enabled": {"const": true}}
+          },
+          "then": {
+            "required": ["limit_per_reference", "cache_enabled", "checkpoint_sha256"],
+            "properties": {
+              "transport_mode": {"enum": ["network", "offline_replay"]},
+              "sources": {"minItems": 1},
+              "selected_reference_numbers": {"minItems": 1}
+            }
+          },
+          "else": {
+            "properties": {
+              "transport_mode": {"const": "none"},
+              "sources": {"maxItems": 0},
+              "selected_reference_numbers": {"maxItems": 0}
+            }
+          }
+        },
+        {
+          "if": {
+            "required": ["transport_mode"],
+            "properties": {"transport_mode": {"const": "offline_replay"}}
+          },
+          "then": {
+            "required": ["cache_enabled"],
+            "properties": {"cache_enabled": {"const": true}}
+          }
+        }
+      ]
+    },
+    "lookup_batch": {
+      "type": ["object", "null"],
+      "required": [
+        "batch_id", "batch_status", "selected_count", "attempted_this_run",
+        "completed_count", "partial_count", "failed_count", "pending_count",
+        "semantic_support_assessed"
+      ],
+      "properties": {
+        "batch_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "batch_status": {"enum": ["pending", "completed", "partial", "failed"]},
+        "selected_count": {"type": "integer", "minimum": 1},
+        "attempted_this_run": {"type": "integer", "minimum": 0},
+        "completed_count": {"type": "integer", "minimum": 0},
+        "partial_count": {"type": "integer", "minimum": 0},
+        "failed_count": {"type": "integer", "minimum": 0},
+        "pending_count": {"type": "integer", "minimum": 0},
+        "semantic_support_assessed": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "reference_count", "cited_reference_count", "citation_occurrence_count",
+        "dangling_citation_numbers", "uncited_reference_numbers",
+        "lookup_attempted_count", "high_confidence_match_count",
+        "lookup_completed_count", "lookup_partial_count", "lookup_failed_count"
+      ],
+      "properties": {
+        "reference_count": {"type": "integer", "minimum": 1},
+        "cited_reference_count": {"type": "integer", "minimum": 0},
+        "citation_occurrence_count": {"type": "integer", "minimum": 0},
+        "dangling_citation_numbers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "uncited_reference_numbers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "lookup_attempted_count": {"type": "integer", "minimum": 0},
+        "high_confidence_match_count": {"type": "integer", "minimum": 0},
+        "lookup_completed_count": {"type": "integer", "minimum": 0},
+        "lookup_partial_count": {"type": "integer", "minimum": 0},
+        "lookup_failed_count": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "output_sha256": {
+      "type": "object",
+      "minProperties": 3,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "human_adjudicated": {"const": false},
+    "semantic_support_assessed": {"const": false},
+    "coverage_equivalent_to_subscription_indexes": {"const": false}
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["lookup_policy"],
+        "properties": {
+          "lookup_policy": {
+            "required": ["lookup_enabled"],
+            "properties": {"lookup_enabled": {"const": true}}
+          }
+        }
+      },
+      "then": {
+        "properties": {"lookup_batch": {"type": "object"}}
+      },
+      "else": {
+        "properties": {"lookup_batch": {"const": null}}
+      }
+    }
+  ],
+  "additionalProperties": false
+}
