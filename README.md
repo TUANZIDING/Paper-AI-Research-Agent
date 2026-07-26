@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml"><img src="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml/badge.svg" alt="持续集成状态"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 或更高版本">
-  <img src="https://img.shields.io/badge/version-0.3.1-0F766E" alt="版本 0.3.1">
+  <img src="https://img.shields.io/badge/version-0.3.3-0F766E" alt="版本 0.3.3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-D97706" alt="MIT 许可证"></a>
 </p>
 
@@ -49,6 +49,9 @@ flowchart TD
 | 已实现 | Crossref 与 PubMed 出版后状态门 | 风险信号或查询不完整会阻断引用候选 |
 | 已实现 | 原始响应存档、`evidence_id`、SHA-256、`verify-run` | 验证当前 manifest 与文件一致性 |
 | 已实现 | SQLite 内容寻址缓存与严格离线回放 | 缓存缺失不会联网回退 |
+| 受限实现 | 编号制 PDF 参考文献提取与正文引用位置映射 | 仅支持明确标题和连续 `[1]..[n]`；位置不等于语义支持 |
+| 受限实现 | PDF 参考文献查询批次的断点续跑 | 已完成条目跳过，未完成/部分/失败条目可重试；不是通用分页续传 |
+| 受限实现 | 官方组织域名/路径的人工登记候选 | 显式 allowlist 与已哈希登记证据只产生候选；不证明官网身份或下载许可 |
 | 受限实现 | 许可证/全文位置候选与策略门控的公开全文下载 | 候选不是法律授权；需白名单许可证、已知版本及全部安全门 |
 | 受限实现 | Crossref 状态补充 fallback | `crossmark_realtime_verified=false`，不是实时 Crossmark 核验 |
 | 受限实现 | 已哈希 UTF-8/JATS 文本的 quote/paragraph 位置绑定 | 位置命中不等于语义支持或 `claim_verified` |
@@ -59,7 +62,7 @@ flowchart TD
 
 ## 快速开始
 
-要求 Python 3.10+。核心运行时仅使用标准库。
+要求 Python 3.10+。网络与审计内核使用标准库，PDF 文本提取使用 `pypdf`，安装项目时会自动安装。
 
 ```bash
 python3 -m venv .venv
@@ -84,6 +87,39 @@ runs/<UTC时间>-<查询词>/
 ```bash
 research-agent verify-run /absolute/path/to/run-directory
 ```
+
+逆向审计一篇本地 PDF（默认仅解析，不联网）：
+
+```bash
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --output /absolute/path/to/pdf-audits
+
+# 明确允许后，才逐条查询 PubMed 与 Europe PMC，并归档远端原始响应
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --cache-db /absolute/path/to/http-cache.sqlite3 \
+  --output /absolute/path/to/pdf-audits
+
+# 可先对困难条目做小批量真实查询
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --lookup-references 1,46,59 --limit-per-reference 5
+
+# 本轮最多处理 10 个未完成条目；再次使用同一 checkpoint 可继续
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --lookup-references 1-75 --max-items 10 \
+  --checkpoint /absolute/path/to/reference-checkpoint.jsonl \
+  --cache-db /absolute/path/to/http-cache.sqlite3
+```
+
+checkpoint 是带事件哈希链的追加式进度账本，并绑定所选编号与输入载荷。篡改、截断
+或复用到不同输入会失败关闭。它只恢复逐条书目查询，不恢复 PDF 提取，也不实现
+普通 `search` 命令的中断分页续传。
+批次仍为 `partial`、`failed` 或 `pending` 时，命令保留产物并返回退出码 3；只有全部
+所选条目的查询链达到 `completed` 才返回 0。
+
+产物包含 PDF 哈希、结构化参考文献、正文引用页码/短上下文及哈希、候选匹配分数、
+原始 API 响应和 manifest。自动结果始终保留
+`semantic_support_status=NOT_ASSESSED`、`human_adjudicated=false`；详见
+[PDF 参考文献审计边界](docs/PDF_REFERENCE_AUDIT.md)。
 
 严格离线回放：
 
@@ -114,6 +150,26 @@ research-agent download-fulltext \
 robots、总时限、大小、PDF/JATS XML 结构及原子落盘。PDF 还需要本机 `pdfinfo`；
 任一门不满足即停止。
 
+登记官方来源候选（不联网，也不授权下载）：
+
+```bash
+research-agent register-official-source \
+  --organization-id example-guideline-body \
+  --organization-name 'Example Guideline Body' \
+  --hostname guidance.example.org --path-prefix /standards \
+  --registrar-role 'information governance reviewer' \
+  --evidence-source-url 'https://registry.example.org/entry' \
+  --evidence-file /absolute/path/to/registry-evidence.txt \
+  --observed-at '2026-07-27T10:00:00+08:00' \
+  --output /absolute/path/to/official-source-evidence
+
+research-agent propose-official-source \
+  --registration-bundle /absolute/path/to/official-registration-SHA256.json \
+  --organization-id example-guideline-body \
+  --url 'https://guidance.example.org/standards/item' --title 'Guideline title' \
+  --output /absolute/path/to/official-source-evidence
+```
+
 ## 信任模型
 
 - 摘要、全文、网页、附件和远端元数据始终按不可信输入处理。
@@ -123,6 +179,8 @@ robots、总时限、大小、PDF/JATS XML 结构及原子落盘。PDF 还需要
 - claim 的位置绑定不证明科学结论真实，也不证明语义蕴含。
 - 自我声明哈希链不证明现实身份；外部签名只证明密钥控制。
 - 开放源覆盖不等于商业数据库覆盖或系统综述无遗漏。
+- 网页自称“官方”不会升级状态；官方来源候选不证明域名控制、内容最新、法律许可
+  或人工核读，且当前固定 `network_fetch_permitted=false`。
 
 ## 验证
 
@@ -132,18 +190,18 @@ python3 scripts/verify_release.py
 python3 -m compileall -q src scripts tests
 ```
 
-2026-07-26 快照：155 项本地集成测试通过；6 条 golden seed；另有 240 条
+2026-07-26 快照：测试数以当前 CI 输出为准；6 条 golden seed；另有 240 条
 确定性合成契约/对抗用例。后者不是独立人工裁决黄金集。
 
 ## 尚未完成
 
 1. 许可证候选的最终法律/政策判断与跨法域批准；
 2. 更广发布商格式和可控公网环境的全文下载验收；
-3. PDF/OCR/页码/表格/图片的受控 claim-evidence 派生链；
+3. OCR、表格、图片和全文语义的受控 claim-evidence 派生链；
 4. 200+ 真实困难样本及独立人工标注/裁决；
 5. 外部真实人工核读、现实身份、专业独立性、同意和审批；
 6. 预印本、接受稿、正式版与更正稿版本图自动生产；
-7. 中断分页续传、部分页恢复、检索批次比较和独立实时 Crossmark 提供方。
+7. 通用检索中断分页续传、部分页恢复、检索批次比较和独立实时 Crossmark 提供方。
 
 ## 文档
 
@@ -151,6 +209,7 @@ python3 -m compileall -q src scripts tests
 - [分阶段验收门](docs/ACCEPTANCE_GATES.md)
 - [实施路线](docs/ROADMAP.md)
 - [Claim–Evidence 位置绑定](docs/CLAIM_EVIDENCE.md)
+- [PDF 参考文献审计边界](docs/PDF_REFERENCE_AUDIT.md)
 - [Crossmark 补充覆盖政策](docs/CROSSMARK_POLICY.md)
 - [人工核读、身份与法律判断边界](docs/HUMAN_AND_LEGAL_GATES.md)
 - [主视觉来源与使用边界](docs/ASSET_PROVENANCE.md)

@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml"><img src="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml/badge.svg" alt="Continuous integration status"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 or later">
-  <img src="https://img.shields.io/badge/version-0.3.1-0F766E" alt="Version 0.3.1">
+  <img src="https://img.shields.io/badge/version-0.3.3-0F766E" alt="Version 0.3.3">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-D97706" alt="MIT license"></a>
 </p>
 
@@ -53,6 +53,9 @@ post-publication gate → hashed evidence archive → human screening.
 | Implemented | Crossref and PubMed post-publication gate | Risk signals or incomplete checks block citation candidates |
 | Implemented | Raw-response archive, `evidence_id`, SHA-256, and `verify-run` | Checks files against the current manifest |
 | Implemented | Content-addressed SQLite cache and strict offline replay | Missing cache entries never fall back to the network |
+| Limited | Numbered-PDF reference extraction and body-citation location mapping | Requires a heading and continuous `[1]..[n]`; location is not semantic support |
+| Limited | Resumable PDF-reference lookup batches | Completed items are skipped while unfinished/partial/failed items remain retryable; not general pagination resume |
+| Limited | Manually registered official-organization host/path candidates | An explicit allowlist and hashed registration evidence produce candidates only; no official-identity proof or fetch permission |
 | Limited | License/location candidates and policy-gated public full-text fetcher | A candidate is not legal clearance; explicit license, version, and all safety gates are required |
 | Limited | Crossref status fallback | `crossmark_realtime_verified=false`; not a live Crossmark verification |
 | Limited | Quote/paragraph binding in hashed UTF-8 or JATS text | A location match is not semantic support or `claim_verified` |
@@ -63,7 +66,7 @@ See [Acceptance Gates](docs/ACCEPTANCE_GATES.md) for the full contract.
 
 ## Quick start
 
-Python 3.10+ is required. The core runtime uses only the standard library.
+Python 3.10+ is required. The network/audit core uses the standard library; PDF text extraction uses `pypdf`, installed with the project.
 
 ```bash
 python3 -m venv .venv
@@ -88,6 +91,41 @@ Verify a run:
 ```bash
 research-agent verify-run /absolute/path/to/run-directory
 ```
+
+Reverse-audit a local PDF (local extraction only by default):
+
+```bash
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --output /absolute/path/to/pdf-audits
+
+# Network lookup is explicit; raw PubMed/Europe PMC responses are archived
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --cache-db /absolute/path/to/http-cache.sqlite3 \
+  --output /absolute/path/to/pdf-audits
+
+# A bounded live lookup can target difficult entries first
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --lookup-references 1,46,59 --limit-per-reference 5
+
+# Process at most 10 unfinished items now; reuse the checkpoint to continue
+research-agent audit-pdf-references /absolute/path/to/article.pdf \
+  --lookup --lookup-references 1-75 --max-items 10 \
+  --checkpoint /absolute/path/to/reference-checkpoint.jsonl \
+  --cache-db /absolute/path/to/http-cache.sqlite3
+```
+
+The checkpoint is an append-only, hash-chained progress ledger bound to selected
+references and their input payloads. Tampering, truncation, or reuse with different
+inputs fails closed. It resumes per-reference lookups only, not PDF extraction or
+interrupted pagination in the general `search` command.
+If a batch remains `partial`, `failed`, or `pending`, the command preserves its
+artifacts and exits with status 3. It exits 0 only when all selected lookup chains
+are `completed`.
+
+Artifacts bind the PDF hash to parsed references, page/context citation locations,
+candidate scores, raw API bytes, and a manifest. Automated output retains
+`semantic_support_status=NOT_ASSESSED` and `human_adjudicated=false`; see the
+[PDF reference-audit boundary](docs/PDF_REFERENCE_AUDIT.md).
 
 Strict offline replay:
 
@@ -119,6 +157,26 @@ DNS/IP and SSRF constraints, same-origin redirects, robots policy, wall-clock ti
 size, PDF/JATS XML structure, and atomic persistence. PDF validation also requires
 local `pdfinfo`. Any failed gate stops the operation.
 
+Register an official-source candidate (no network request or fetch permission):
+
+```bash
+research-agent register-official-source \
+  --organization-id example-guideline-body \
+  --organization-name 'Example Guideline Body' \
+  --hostname guidance.example.org --path-prefix /standards \
+  --registrar-role 'information governance reviewer' \
+  --evidence-source-url 'https://registry.example.org/entry' \
+  --evidence-file /absolute/path/to/registry-evidence.txt \
+  --observed-at '2026-07-27T10:00:00+08:00' \
+  --output /absolute/path/to/official-source-evidence
+
+research-agent propose-official-source \
+  --registration-bundle /absolute/path/to/official-registration-SHA256.json \
+  --organization-id example-guideline-body \
+  --url 'https://guidance.example.org/standards/item' --title 'Guideline title' \
+  --output /absolute/path/to/official-source-evidence
+```
+
 ## Trust model
 
 - Abstracts, full text, webpages, attachments, and remote metadata remain untrusted inputs.
@@ -128,6 +186,9 @@ local `pdfinfo`. Any failed gate stops the operation.
 - A claim location does not prove scientific truth or semantic entailment.
 - A self-attestation hash chain does not prove identity; a signature proves key control only.
 - Coverage from open scholarly sources is not equivalent to commercial-database coverage or a complete systematic-review search.
+- A webpage cannot promote itself by claiming to be official. An official-source
+  candidate does not prove domain control, currentness, legal permission, or human
+  reading, and currently retains `network_fetch_permitted=false`.
 
 ## Verification
 
@@ -137,7 +198,7 @@ python3 scripts/verify_release.py
 python3 -m compileall -q src scripts tests
 ```
 
-Snapshot on 2026-07-26: 155 local integration tests passed, with six golden seeds and
+Snapshot on 2026-07-26: use the current CI output for the test count; six golden seeds and
 240 deterministic synthetic contract/adversarial cases. The latter are not an
 independently human-adjudicated gold set.
 
@@ -145,11 +206,11 @@ independently human-adjudicated gold set.
 
 1. Final legal/policy judgment and cross-jurisdiction approval for license candidates;
 2. broader publisher formats and public-network full-text acceptance testing;
-3. controlled PDF/OCR/page/table/figure claim-evidence derivation;
+3. controlled OCR/table/figure and full-text semantic claim-evidence derivation;
 4. 200+ real difficult cases with independent human labeling and adjudication;
 5. real external human reading, identity, independence, consent, and approval;
 6. automatic version graphs for preprints, accepted manuscripts, versions of record, and corrections;
-7. interrupted-pagination resume, partial-page recovery, run comparison, and an independent live Crossmark provider.
+7. general-search interrupted-pagination resume, partial-page recovery, run comparison, and an independent live Crossmark provider.
 
 ## Documentation (currently Chinese)
 
@@ -157,6 +218,7 @@ independently human-adjudicated gold set.
 - [Acceptance gates](docs/ACCEPTANCE_GATES.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Claim–Evidence location binding](docs/CLAIM_EVIDENCE.md)
+- [PDF reference-audit boundary](docs/PDF_REFERENCE_AUDIT.md)
 - [Crossmark fallback policy](docs/CROSSMARK_POLICY.md)
 - [Human review, identity, and legal gates](docs/HUMAN_AND_LEGAL_GATES.md)
 - [Hero asset provenance and boundaries](docs/ASSET_PROVENANCE.md)

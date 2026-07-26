@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 from datetime import datetime, timezone
+import hashlib
+from importlib.metadata import PackageNotFoundError, version
 import json
 import os
 from pathlib import Path
+import re
+import shutil
 import sys
 
 from .audit import verify_run
@@ -26,9 +31,33 @@ from .human_read import (
 from .http import JsonHttpClient, RemoteServiceError
 from .license_policy import assess_fulltext_license
 from .license_discovery import discover_license_candidates
+from .official_sources import (
+    OfficialDomainRule,
+    OfficialSourcePolicyError,
+    OfficialSourceRegistry,
+    create_manual_registration,
+    load_registration_evidence_bundle,
+    save_candidate_evidence,
+    save_registration_evidence_bundle,
+)
 from .pipeline import ResearchPipeline
+from .pdf_audit import (
+    PdfReferenceAuditError,
+    extract_pdf_references,
+    lookup_reference,
+    write_pdf_audit,
+)
 from .publication_status import assess_crossref_status
 from .reporting import prepare_run_dir, write_run
+from .reference_batch import (
+    LookupOutcome,
+    ReferenceBatchError,
+    ReferenceBatchIntegrityError,
+    ReferenceItem,
+    load_checkpoint,
+    result_to_dict,
+    run_reference_batch,
+)
 from .sources import CrossrefSource, EuropePmcSource, PubMedSource
 
 
@@ -204,15 +233,82 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify manifest and raw-response SHA-256 hashes",
     )
     verify_run_parser.add_argument("run_dir", type=Path)
+
+    register_official = subparsers.add_parser(
+        "register-official-source",
+        help="Freeze a manual official-source allowlist candidate and its evidence",
+    )
+    register_official.add_argument("--organization-id", required=True)
+    register_official.add_argument("--organization-name", required=True)
+    register_official.add_argument("--hostname", required=True)
+    register_official.add_argument("--path-prefix", action="append", required=True)
+    register_official.add_argument("--include-subdomains", action="store_true")
+    register_official.add_argument("--registrar-role", required=True)
+    register_official.add_argument("--evidence-source-url", required=True)
+    register_official.add_argument("--evidence-file", type=Path, required=True)
+    register_official.add_argument("--observed-at", required=True)
+    register_official.add_argument("--output", type=Path, required=True)
+
+    propose_official = subparsers.add_parser(
+        "propose-official-source",
+        help="Create a non-network, non-legal official-source URL candidate",
+    )
+    propose_official.add_argument("--registration-bundle", type=Path, required=True)
+    propose_official.add_argument("--organization-id", required=True)
+    propose_official.add_argument("--url", required=True)
+    propose_official.add_argument("--title", required=True)
+    propose_official.add_argument("--output", type=Path, required=True)
+
+    pdf_audit = subparsers.add_parser(
+        "audit-pdf-references",
+        help="Extract numbered references, map body citations, and optionally verify identities",
+    )
+    pdf_audit.add_argument("pdf", type=Path)
+    pdf_audit.add_argument(
+        "--output", type=Path, default=Path("pdf-audits"),
+        help="Root directory for immutable audit artifacts (default: pdf-audits)",
+    )
+    pdf_audit.add_argument(
+        "--lookup", action="store_true",
+        help="Query selected open APIs for each parsed reference (network is opt-in)",
+    )
+    pdf_audit.add_argument(
+        "--sources", default="pubmed,europe_pmc",
+        help="Comma-separated lookup sources: pubmed,europe_pmc",
+    )
+    pdf_audit.add_argument(
+        "--limit-per-reference", type=int, default=5,
+        help="Maximum candidates requested per reference (default: 5)",
+    )
+    pdf_audit.add_argument(
+        "--lookup-references",
+        help="Optional comma/range selector such as 1,3,10-20 (default: every reference)",
+    )
+    pdf_audit.add_argument("--cache-db", type=Path)
+    pdf_audit.add_argument(
+        "--checkpoint", type=Path,
+        help="Append-only batch checkpoint path (a deterministic local path is used by default)",
+    )
+    pdf_audit.add_argument(
+        "--max-items", type=int,
+        help="Process at most this many unfinished references, then stop resumably",
+    )
+    pdf_audit.add_argument(
+        "--offline-replay", action="store_true",
+        help="Use only cached API responses; requires --lookup and --cache-db",
+    )
+    pdf_audit.add_argument("--max-bytes", type=int, default=100_000_000)
+    pdf_audit.add_argument("--max-pages", type=int, default=500)
+    pdf_audit.add_argument("--json", action="store_true")
     return parser
 
 
 def _user_agent() -> str:
     contact = os.getenv("RESEARCH_AGENT_EMAIL")
     return (
-        f"AIResearchAgent/0.3.1 (mailto:{contact})"
+        f"AIResearchAgent/0.3.3 (mailto:{contact})"
         if contact
-        else "AIResearchAgent/0.3.1"
+        else "AIResearchAgent/0.3.3"
     )
 
 
@@ -567,6 +663,343 @@ def run_verify_run(args: argparse.Namespace) -> int:
     return 0 if result.valid else 2
 
 
+def run_audit_pdf_references(args: argparse.Namespace) -> int:
+    if args.max_bytes < 1 or args.max_pages < 1:
+        print("PDF audit blocked: size and page limits must be positive.", file=sys.stderr)
+        return 2
+    if args.limit_per_reference < 1 or args.limit_per_reference > 20:
+        print("PDF audit blocked: --limit-per-reference must be between 1 and 20.", file=sys.stderr)
+        return 2
+    if args.max_items is not None and args.max_items < 0:
+        print("PDF audit blocked: --max-items must be non-negative.", file=sys.stderr)
+        return 2
+    sources = [value.strip() for value in args.sources.split(",") if value.strip()]
+    unknown = set(sources) - {"pubmed", "europe_pmc"}
+    if not sources or unknown:
+        detail = f": {', '.join(sorted(unknown))}" if unknown else ""
+        print(f"PDF audit blocked: invalid lookup sources{detail}.", file=sys.stderr)
+        return 2
+    if args.offline_replay and (not args.lookup or args.cache_db is None):
+        print(
+            "PDF audit blocked: --offline-replay requires --lookup and --cache-db.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.offline_replay and not args.cache_db.resolve().is_file():
+        print("PDF audit blocked: offline replay cache does not exist.", file=sys.stderr)
+        return 2
+
+    try:
+        extraction = extract_pdf_references(
+            args.pdf, max_bytes=args.max_bytes, max_pages=args.max_pages
+        )
+    except PdfReferenceAuditError as exc:
+        print(f"PDF audit blocked: {exc}", file=sys.stderr)
+        return 2
+    try:
+        extractor_version = version("pypdf")
+    except PackageNotFoundError:
+        extractor_version = "unavailable"
+
+    selected_numbers = {item.number for item in extraction.references}
+    if args.lookup_references:
+        if not args.lookup:
+            print("PDF audit blocked: --lookup-references requires --lookup.", file=sys.stderr)
+            return 2
+        try:
+            selected_numbers = set()
+            for part in args.lookup_references.split(","):
+                match = re.fullmatch(r"\s*(\d+)(?:\s*-\s*(\d+))?\s*", part)
+                if not match:
+                    raise ValueError(part)
+                start = int(match.group(1))
+                end = int(match.group(2) or start)
+                if end < start or end - start > 1000:
+                    raise ValueError(part)
+                selected_numbers.update(range(start, end + 1))
+        except ValueError:
+            print("PDF audit blocked: invalid --lookup-references selector.", file=sys.stderr)
+            return 2
+        unknown_numbers = selected_numbers - {item.number for item in extraction.references}
+        if not selected_numbers or unknown_numbers:
+            print(
+                "PDF audit blocked: lookup selector contains no references or unknown numbers.",
+                file=sys.stderr,
+            )
+            return 2
+
+    started_at = datetime.now(timezone.utc).isoformat()
+    output_root = args.output.resolve()
+    lookups: dict[int, dict] = {}
+    batch_payload: dict | None = None
+    if args.lookup:
+        output_root.mkdir(parents=True, exist_ok=True)
+        transport_mode = "offline_replay" if args.offline_replay else "network"
+        checkpoint_identity = json.dumps(
+            {
+                "pdf_sha256": extraction.source_sha256,
+                "selected": sorted(selected_numbers),
+                "sources": sources,
+                "limit": args.limit_per_reference,
+                "lookup_policy_version": "pdf-reference-lookup-0.2",
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        checkpoint_key = hashlib.sha256(checkpoint_identity).hexdigest()[:24]
+        checkpoint = (
+            args.checkpoint.resolve()
+            if args.checkpoint
+            else output_root / ".checkpoints" / f"{checkpoint_key}.jsonl"
+        )
+        archive_dir = Path(str(checkpoint) + ".raw_responses")
+        cache = HttpCache(args.cache_db.resolve()) if args.cache_db else None
+        client = JsonHttpClient(
+            _user_agent(), archive_dir=archive_dir, cache=cache, offline=args.offline_replay
+        )
+        pipeline = ResearchPipeline(
+            PubMedSource(client), EuropePmcSource(client), CrossrefSource(client)
+        )
+        reference_by_id = {
+            str(reference.number): reference for reference in extraction.references
+        }
+        items = [
+            ReferenceItem(
+                str(reference.number),
+                {
+                    "reference": asdict(reference),
+                    "lookup_policy": {
+                        "sources": sources,
+                        "limit_per_reference": args.limit_per_reference,
+                    },
+                },
+            )
+            for reference in extraction.references
+        ]
+
+        def execute_reference(item, context):
+            candidates, issues, queries, coverage = lookup_reference(
+                reference_by_id[item.reference_id],
+                pipeline,
+                sources,
+                limit=args.limit_per_reference,
+                transport_mode=context.transport_mode,
+                cache_enabled=context.cache_enabled,
+            )
+            best_decision = (
+                candidates[0]["score"]["decision"] if candidates else "not_matched"
+            )
+            match_status = (
+                "high-confidence"
+                if best_decision == "matched_high_confidence"
+                else (
+                    "review"
+                    if best_decision
+                    in {"candidate_requires_review", "identifier_metadata_conflict"}
+                    else "not-matched"
+                )
+            )
+            execution_status = str(coverage["execution_status"])
+            if execution_status == "failed":
+                match_status = None
+            return LookupOutcome(
+                execution_status=execution_status,
+                match_status=match_status,
+                queries=tuple(queries),
+                candidates=tuple(candidates),
+                issues=tuple(issues),
+                evidence=coverage,
+            )
+
+        try:
+            batch = run_reference_batch(
+                items,
+                [str(number) for number in sorted(selected_numbers)],
+                checkpoint,
+                execute_reference,
+                transport_mode=transport_mode,
+                cache_enabled=cache is not None,
+                max_items=args.max_items,
+                batch_context={
+                    "source_pdf_sha256": extraction.source_sha256,
+                    "page_text_sha256": list(extraction.page_text_sha256),
+                    "extractor": "pypdf",
+                    "extractor_version": extractor_version,
+                    "lookup_policy_version": "pdf-reference-lookup-0.2",
+                },
+            )
+        except (ReferenceBatchError, ReferenceBatchIntegrityError) as exc:
+            print(f"PDF audit blocked: {exc}", file=sys.stderr)
+            return 2
+        batch_payload = result_to_dict(batch)
+        latest_events: dict[int, dict] = {}
+        for event in load_checkpoint(checkpoint):
+            if event.get("event_type") in {"attempt_started", "attempt_finished"}:
+                latest_events[int(event["reference_id"])] = event
+        for number, event in latest_events.items():
+            if event.get("event_type") != "attempt_finished":
+                continue
+            evidence = dict(event.get("evidence") or {})
+            lookups[number] = {
+                "query_attempted": True,
+                "queries": event.get("queries", []),
+                "candidates": event.get("candidates", []),
+                "issues": event.get("issues", []),
+                "execution_status": event.get("execution_status", "failed"),
+                "match_status": event.get("match_status"),
+                "search_complete": evidence.get("search_complete", False),
+                "identity_resolved": evidence.get("identity_resolved", False),
+                "pagination_states": evidence.get("pagination_states", []),
+                "candidate_exhaustion_proven": evidence.get(
+                    "candidate_exhaustion_proven", False
+                ),
+                "error": event.get("error"),
+            }
+        checkpoint_sha256 = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+        run_dir = write_pdf_audit(
+            extraction,
+            output_root,
+            lookups=lookups,
+            started_at=started_at,
+            lookup_policy={
+                "lookup_enabled": True,
+                "transport_mode": transport_mode,
+                "sources": sources,
+                "selected_reference_numbers": sorted(selected_numbers),
+                "limit_per_reference": args.limit_per_reference,
+                "cache_enabled": cache is not None,
+                "checkpoint_sha256": checkpoint_sha256,
+            },
+            lookup_batch={
+                "batch_id": batch_payload["batch_id"],
+                "batch_status": batch_payload["batch_status"],
+                "selected_count": batch_payload["selected_count"],
+                "attempted_this_run": batch_payload["attempted_this_run"],
+                "completed_count": batch_payload["completed_count"],
+                "partial_count": batch_payload["partial_count"],
+                "failed_count": batch_payload["failed_count"],
+                "pending_count": batch_payload["pending_count"],
+                "semantic_support_assessed": False,
+            },
+        )
+        shutil.copy2(checkpoint, run_dir / "batch_checkpoint.jsonl")
+        if archive_dir.is_dir() and any(archive_dir.iterdir()):
+            shutil.copytree(archive_dir, run_dir / "raw_responses")
+        manifest_path = run_dir / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["artifact_completed_at"] = datetime.now(timezone.utc).isoformat()
+        manifest["output_sha256"] = {
+            str(path.relative_to(run_dir)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(run_dir.rglob("*"))
+            if path.is_file() and path.name != "manifest.json"
+        }
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+    else:
+        run_dir = write_pdf_audit(
+            extraction,
+            output_root,
+            started_at=started_at,
+            lookup_policy={
+                "lookup_enabled": False,
+                "transport_mode": "none",
+                "sources": [],
+                "selected_reference_numbers": [],
+                "limit_per_reference": args.limit_per_reference,
+                "cache_enabled": False,
+            },
+        )
+
+    result = {
+        "run_dir": str(run_dir),
+        "references": len(extraction.references),
+        "cited_references": len(extraction.references) - len(extraction.uncited_reference_numbers),
+        "dangling_citations": list(extraction.dangling_citation_numbers),
+        "lookup_attempted": args.lookup,
+        "batch": batch_payload,
+        "lookup_complete": batch_payload is None or batch_payload["batch_status"] == "completed",
+        "human_adjudicated": False,
+        "semantic_support_assessed": False,
+    }
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False))
+    else:
+        print(f"Run: {run_dir}")
+        print(f"References: {result['references']}")
+        print(f"Cited references: {result['cited_references']}")
+        print(f"Identity lookup attempted: {'yes' if args.lookup else 'no'}")
+        if batch_payload is not None:
+            print(f"Lookup batch status: {batch_payload['batch_status']}")
+            print(
+                "Lookup counts: "
+                f"completed={batch_payload['completed_count']}, "
+                f"partial={batch_payload['partial_count']}, "
+                f"failed={batch_payload['failed_count']}, "
+                f"pending={batch_payload['pending_count']}"
+            )
+        print("Semantic support assessed: no")
+    return 0 if result["lookup_complete"] else 3
+
+
+def run_register_official_source(args: argparse.Namespace) -> int:
+    try:
+        evidence = args.evidence_file.resolve().read_bytes()
+        registration = create_manual_registration(
+            organization_id=args.organization_id,
+            organization_name=args.organization_name,
+            rules=(OfficialDomainRule(
+                args.hostname,
+                tuple(args.path_prefix),
+                args.include_subdomains,
+            ),),
+            registrar_role=args.registrar_role,
+            evidence_source_url=args.evidence_source_url,
+            evidence_bytes=evidence,
+            evidence_observed_at=args.observed_at,
+        )
+        saved = save_registration_evidence_bundle(
+            registration, evidence, args.output.resolve()
+        )
+    except (OSError, OfficialSourcePolicyError) as exc:
+        print(f"Official-source registration blocked: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps({
+        "path": str(saved.path),
+        "sha256": saved.sha256,
+        "registration_sha256": registration.sha256,
+        "registrar_identity_verified": False,
+        "final_official_status_verified": False,
+    }, ensure_ascii=False))
+    return 0
+
+
+def run_propose_official_source(args: argparse.Namespace) -> int:
+    try:
+        registration = load_registration_evidence_bundle(
+            args.registration_bundle.resolve()
+        )
+        candidate = OfficialSourceRegistry((registration,)).propose(
+            organization_id=args.organization_id,
+            url=args.url,
+            title=args.title,
+        )
+        saved = save_candidate_evidence(candidate, args.output.resolve())
+    except (OSError, OfficialSourcePolicyError) as exc:
+        print(f"Official-source candidate blocked: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps({
+        "path": str(saved.path),
+        "sha256": saved.sha256,
+        "evidence_id": candidate.evidence_id,
+        "candidate_status": candidate.candidate_status,
+        "network_fetch_permitted": False,
+        "official_identity_verified": False,
+        "final_legal_judgment": False,
+    }, ensure_ascii=False))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -596,6 +1029,12 @@ def main(argv: list[str] | None = None) -> int:
         return run_verify_read_log(args)
     if args.command == "verify-run":
         return run_verify_run(args)
+    if args.command == "register-official-source":
+        return run_register_official_source(args)
+    if args.command == "propose-official-source":
+        return run_propose_official_source(args)
+    if args.command == "audit-pdf-references":
+        return run_audit_pdf_references(args)
     parser.error("Unknown command")
     return 2
 
