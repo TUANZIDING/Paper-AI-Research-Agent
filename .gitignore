@@ -6,6 +6,7 @@ dist/
 build/
 *.egg-info/
 runs/
+pdf-audits/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal

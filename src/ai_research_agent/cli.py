@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import sys
+import tempfile
 
 from .audit import verify_run
 from .cache import HttpCache
@@ -27,6 +30,12 @@ from .http import JsonHttpClient, RemoteServiceError
 from .license_policy import assess_fulltext_license
 from .license_discovery import discover_license_candidates
 from .pipeline import ResearchPipeline
+from .pdf_audit import (
+    PdfReferenceAuditError,
+    extract_pdf_references,
+    lookup_reference,
+    write_pdf_audit,
+)
 from .publication_status import assess_crossref_status
 from .reporting import prepare_run_dir, write_run
 from .sources import CrossrefSource, EuropePmcSource, PubMedSource
@@ -204,15 +213,49 @@ def build_parser() -> argparse.ArgumentParser:
         help="Verify manifest and raw-response SHA-256 hashes",
     )
     verify_run_parser.add_argument("run_dir", type=Path)
+
+    pdf_audit = subparsers.add_parser(
+        "audit-pdf-references",
+        help="Extract numbered references, map body citations, and optionally verify identities",
+    )
+    pdf_audit.add_argument("pdf", type=Path)
+    pdf_audit.add_argument(
+        "--output", type=Path, default=Path("pdf-audits"),
+        help="Root directory for immutable audit artifacts (default: pdf-audits)",
+    )
+    pdf_audit.add_argument(
+        "--lookup", action="store_true",
+        help="Query selected open APIs for each parsed reference (network is opt-in)",
+    )
+    pdf_audit.add_argument(
+        "--sources", default="pubmed,europe_pmc",
+        help="Comma-separated lookup sources: pubmed,europe_pmc",
+    )
+    pdf_audit.add_argument(
+        "--limit-per-reference", type=int, default=5,
+        help="Maximum candidates requested per reference (default: 5)",
+    )
+    pdf_audit.add_argument(
+        "--lookup-references",
+        help="Optional comma/range selector such as 1,3,10-20 (default: every reference)",
+    )
+    pdf_audit.add_argument("--cache-db", type=Path)
+    pdf_audit.add_argument(
+        "--offline-replay", action="store_true",
+        help="Use only cached API responses; requires --lookup and --cache-db",
+    )
+    pdf_audit.add_argument("--max-bytes", type=int, default=100_000_000)
+    pdf_audit.add_argument("--max-pages", type=int, default=500)
+    pdf_audit.add_argument("--json", action="store_true")
     return parser
 
 
 def _user_agent() -> str:
     contact = os.getenv("RESEARCH_AGENT_EMAIL")
     return (
-        f"AIResearchAgent/0.3.1 (mailto:{contact})"
+        f"AIResearchAgent/0.3.2 (mailto:{contact})"
         if contact
-        else "AIResearchAgent/0.3.1"
+        else "AIResearchAgent/0.3.2"
     )
 
 
@@ -567,6 +610,148 @@ def run_verify_run(args: argparse.Namespace) -> int:
     return 0 if result.valid else 2
 
 
+def run_audit_pdf_references(args: argparse.Namespace) -> int:
+    if args.max_bytes < 1 or args.max_pages < 1:
+        print("PDF audit blocked: size and page limits must be positive.", file=sys.stderr)
+        return 2
+    if args.limit_per_reference < 1 or args.limit_per_reference > 20:
+        print("PDF audit blocked: --limit-per-reference must be between 1 and 20.", file=sys.stderr)
+        return 2
+    sources = [value.strip() for value in args.sources.split(",") if value.strip()]
+    unknown = set(sources) - {"pubmed", "europe_pmc"}
+    if not sources or unknown:
+        detail = f": {', '.join(sorted(unknown))}" if unknown else ""
+        print(f"PDF audit blocked: invalid lookup sources{detail}.", file=sys.stderr)
+        return 2
+    if args.offline_replay and (not args.lookup or args.cache_db is None):
+        print(
+            "PDF audit blocked: --offline-replay requires --lookup and --cache-db.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.offline_replay and not args.cache_db.resolve().is_file():
+        print("PDF audit blocked: offline replay cache does not exist.", file=sys.stderr)
+        return 2
+
+    try:
+        extraction = extract_pdf_references(
+            args.pdf, max_bytes=args.max_bytes, max_pages=args.max_pages
+        )
+    except PdfReferenceAuditError as exc:
+        print(f"PDF audit blocked: {exc}", file=sys.stderr)
+        return 2
+
+    selected_numbers = {item.number for item in extraction.references}
+    if args.lookup_references:
+        if not args.lookup:
+            print("PDF audit blocked: --lookup-references requires --lookup.", file=sys.stderr)
+            return 2
+        try:
+            selected_numbers = set()
+            for part in args.lookup_references.split(","):
+                match = re.fullmatch(r"\s*(\d+)(?:\s*-\s*(\d+))?\s*", part)
+                if not match:
+                    raise ValueError(part)
+                start = int(match.group(1))
+                end = int(match.group(2) or start)
+                if end < start or end - start > 1000:
+                    raise ValueError(part)
+                selected_numbers.update(range(start, end + 1))
+        except ValueError:
+            print("PDF audit blocked: invalid --lookup-references selector.", file=sys.stderr)
+            return 2
+        unknown_numbers = selected_numbers - {item.number for item in extraction.references}
+        if not selected_numbers or unknown_numbers:
+            print(
+                "PDF audit blocked: lookup selector contains no references or unknown numbers.",
+                file=sys.stderr,
+            )
+            return 2
+
+    started_at = datetime.now(timezone.utc).isoformat()
+    output_root = args.output.resolve()
+    lookups: dict[int, dict] = {}
+    if args.lookup:
+        # Capture all remote bytes in an owned temporary directory, then move
+        # that archive into the immutable run before calculating final hashes.
+        output_root.mkdir(parents=True, exist_ok=True)
+        temporary_root = Path(tempfile.mkdtemp(prefix=".pdf-audit-", dir=output_root))
+        archive_dir = temporary_root / "raw_responses"
+        cache = HttpCache(args.cache_db.resolve()) if args.cache_db else None
+        client = JsonHttpClient(
+            _user_agent(), archive_dir=archive_dir, cache=cache, offline=args.offline_replay
+        )
+        pipeline = ResearchPipeline(
+            PubMedSource(client), EuropePmcSource(client), CrossrefSource(client)
+        )
+        for reference in extraction.references:
+            if reference.number not in selected_numbers:
+                continue
+            try:
+                candidates, issues, queries = lookup_reference(
+                    reference,
+                    pipeline,
+                    sources,
+                    limit=args.limit_per_reference,
+                    transport_mode="offline_replay" if args.offline_replay else "network",
+                    cache_enabled=cache is not None,
+                )
+                lookups[reference.number] = {
+                    "query_attempted": True,
+                    "queries": queries,
+                    "candidates": candidates,
+                    "issues": issues,
+                }
+            except RemoteServiceError as exc:
+                lookups[reference.number] = {
+                    "query_attempted": True,
+                    "queries": [],
+                    "candidates": [],
+                    "issues": [{"source": "lookup", "stage": "discovery", "message": str(exc)}],
+                }
+        raw_files = list(archive_dir.iterdir()) if archive_dir.exists() else []
+        run_dir = write_pdf_audit(
+            extraction, output_root, lookups=lookups, started_at=started_at
+        )
+        if raw_files:
+            archive_dir.rename(run_dir / "raw_responses")
+            # Rebuild the manifest because archived responses are part of the package.
+            manifest_path = run_dir / "manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["output_sha256"] = {
+                str(path.relative_to(run_dir)): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in sorted(run_dir.rglob("*"))
+                if path.is_file() and path.name != "manifest.json"
+            }
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+            )
+        elif archive_dir.exists():
+            archive_dir.rmdir()
+        temporary_root.rmdir()
+    else:
+        run_dir = write_pdf_audit(extraction, output_root, started_at=started_at)
+
+    result = {
+        "run_dir": str(run_dir),
+        "references": len(extraction.references),
+        "cited_references": len(extraction.references) - len(extraction.uncited_reference_numbers),
+        "dangling_citations": list(extraction.dangling_citation_numbers),
+        "lookup_attempted": args.lookup,
+        "human_adjudicated": False,
+        "semantic_support_assessed": False,
+    }
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False))
+    else:
+        print(f"Run: {run_dir}")
+        print(f"References: {result['references']}")
+        print(f"Cited references: {result['cited_references']}")
+        print(f"Identity lookup attempted: {'yes' if args.lookup else 'no'}")
+        print("Semantic support assessed: no")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -596,6 +781,8 @@ def main(argv: list[str] | None = None) -> int:
         return run_verify_read_log(args)
     if args.command == "verify-run":
         return run_verify_run(args)
+    if args.command == "audit-pdf-references":
+        return run_audit_pdf_references(args)
     parser.error("Unknown command")
     return 2
 
