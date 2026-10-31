@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 990" width="1320" height="990" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Microsoft YaHei', 'Segoe UI', sans-serif">
+<defs>
+  <filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.07"/></filter>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/></marker>
+  <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0F766E"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B45309"/></marker>
+  <linearGradient id="hdr" x1="0" x2="1"><stop offset="0" stop-color="#0F766E"/><stop offset="1" stop-color="#155E75"/></linearGradient>
+</defs>
+<rect width="1320" height="990" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1320" height="96" fill="url(#hdr)"/>
+<text x="40" y="46" font-size="26" fill="#FFFFFF" font-weight="700" text-anchor="start" >Paper AI Research Agent · 路线图</text>
+<text x="40" y="74" font-size="14" fill="#CCFBF1" font-weight="500" text-anchor="start" >先做确定性内核，再让 AI 只消费通过门控的数据　|　Deterministic core first, AI on gated data only</text>
+<text x="40" y="136" font-size="15" fill="#0F766E" font-weight="700" text-anchor="start" >已发布 Shipped</text>
+<line x1="60" y1="170" x2="1260" y2="170" stroke="#CBD5E1" stroke-width="3" stroke-linecap="round"/>
+<line x1="60" y1="170" x2="760" y2="170" stroke="#0F766E" stroke-width="3" stroke-linecap="round"/>
+<circle cx="110" cy="170" r="10" fill="#0F766E" stroke="#FFFFFF" stroke-width="3"/>
+<text x="128" y="160" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >v0.3.1</text>
+<text x="189.6" y="160" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="start" >2026-07</text>
+<rect x="90" y="192" width="290" height="138" rx="12" fill="#ECFDF5" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="106" y="220" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >可审计开放检索内核</text>
+<text x="106" y="244" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >PubMed + Europe PMC 完整分页</text>
+<text x="106" y="265" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >去重 · 书目核验 · 撤稿/更正门</text>
+<text x="106" y="286" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >evidence_id · SHA-256 · 离线回放</text>
+<rect x="332.0" y="204" width="36.0" height="22" rx="11" fill="#0F766E" opacity="0.12"/>
+<text x="350.0" y="219" font-size="11.5" fill="#0F766E" font-weight="600" text-anchor="middle" >完成</text>
+<circle cx="430" cy="170" r="10" fill="#0F766E" stroke="#FFFFFF" stroke-width="3"/>
+<text x="448" y="160" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >v0.3.2–0.3.3</text>
+<text x="561.2" y="160" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="start" >2026-07 → 10</text>
+<rect x="410" y="192" width="290" height="138" rx="12" fill="#ECFDF5" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="426" y="220" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >PDF 参考文献逆向审计</text>
+<text x="426" y="244" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >编号制参考文献提取</text>
+<text x="426" y="265" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >正文引用页码 / 上下文哈希</text>
+<text x="426" y="286" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >checkpoint 断点续查</text>
+<rect x="652.0" y="204" width="36.0" height="22" rx="11" fill="#0F766E" opacity="0.12"/>
+<text x="670.0" y="219" font-size="11.5" fill="#0F766E" font-weight="600" text-anchor="middle" >完成</text>
+<circle cx="750" cy="170" r="10" fill="#0F766E" stroke="#FFFFFF" stroke-width="3"/>
+<text x="768" y="160" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >v0.4.0</text>
+<text x="829.6" y="160" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="start" >2026-11-01</text>
+<rect x="730" y="192" width="290" height="138" rx="12" fill="#ECFDF5" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="746" y="220" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >尽量穷尽检索</text>
+<text x="746" y="244" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >OpenAlex · Crossref 来源</text>
+<text x="746" y="265" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >引文滚雪球 + 饱和停止</text>
+<text x="746" y="286" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >合法 OA · 机构清单 · RIS/PRISMA</text>
+<rect x="972.0" y="204" width="36.0" height="22" rx="11" fill="#0F766E" opacity="0.12"/>
+<text x="990.0" y="219" font-size="11.5" fill="#0F766E" font-weight="600" text-anchor="middle" >完成</text>
+<circle cx="1110" cy="170" r="10" fill="#FFFFFF" stroke="#B45309" stroke-width="3"/>
+<text x="1128" y="160" font-size="15" fill="#B45309" font-weight="700" text-anchor="start" >下一步</text>
+<text x="1100" y="220" font-size="13" fill="#475569" font-weight="500" text-anchor="start" >v0.5 起按 A → B → C</text>
+<text x="1100" y="242" font-size="13" fill="#475569" font-weight="500" text-anchor="start" >推进，D 只消费门控</text>
+<text x="1100" y="264" font-size="13" fill="#475569" font-weight="500" text-anchor="start" >后的数据</text>
+<text x="40" y="400" font-size="15" fill="#B45309" font-weight="700" text-anchor="start" >计划 Planned</text>
+<rect x="40.0" y="420" width="290.5" height="320" rx="14" fill="#FFFBEB" stroke="#B45309" stroke-width="1.3" filter="url(#sh)"/>
+<rect x="40.0" y="420" width="290.5" height="62" rx="14" fill="#B45309"/>
+<rect x="40.0" y="460" width="290.5" height="22" fill="#B45309"/>
+<text x="58.0" y="450" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="start" >A · 检索可靠性与覆盖</text>
+<text x="58.0" y="471" font-size="12" fill="#FFFFFF" font-weight="500" text-anchor="start" opacity="0.85">Retrieval reliability</text>
+<circle cx="62.0" cy="508" r="3.5" fill="#B45309"/>
+<text x="74.0" y="512" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >通用检索分页续传</text>
+<text x="74.0" y="530" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >与部分页恢复</text>
+<circle cx="62.0" cy="554" r="3.5" fill="#B45309"/>
+<text x="74.0" y="558" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >检索批次比较</text>
+<text x="74.0" y="576" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >新增 / 消失 / 字段变化</text>
+<circle cx="62.0" cy="600" r="3.5" fill="#B45309"/>
+<text x="74.0" y="604" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >接入 Semantic Scholar</text>
+<text x="74.0" y="622" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >与 OpenAlex key</text>
+<circle cx="62.0" cy="646" r="3.5" fill="#B45309"/>
+<text x="74.0" y="650" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Embase / WoS / Scopus / 知网</text>
+<text x="74.0" y="668" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >合法导出 RIS 本地合并</text>
+<circle cx="62.0" cy="692" r="3.5" fill="#B45309"/>
+<text x="74.0" y="696" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Europe PMC 元数据批量化</text>
+<text x="74.0" y="714" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Unpaywall 覆盖补全</text>
+<path d="M333.5,451 L353.5,451" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="356.5" y="420" width="290.5" height="320" rx="14" fill="#ECFDF5" stroke="#0F766E" stroke-width="1.3" filter="url(#sh)"/>
+<rect x="356.5" y="420" width="290.5" height="62" rx="14" fill="#0F766E"/>
+<rect x="356.5" y="460" width="290.5" height="22" fill="#0F766E"/>
+<text x="374.5" y="450" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="start" >B · 全文与证据生产化</text>
+<text x="374.5" y="471" font-size="12" fill="#FFFFFF" font-weight="500" text-anchor="start" opacity="0.85">Full text &amp; evidence</text>
+<circle cx="378.5" cy="508" r="3.5" fill="#0F766E"/>
+<text x="390.5" y="512" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >许可证证据结构化绑定</text>
+<text x="390.5" y="530" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >最终法律判断仍归人</text>
+<circle cx="378.5" cy="554" r="3.5" fill="#0F766E"/>
+<text x="390.5" y="558" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >更广出版商格式</text>
+<text x="390.5" y="576" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >与公网下载验收</text>
+<circle cx="378.5" cy="600" r="3.5" fill="#0F766E"/>
+<text x="390.5" y="604" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >OCR、表格、图片的受控提取链</text>
+<circle cx="378.5" cy="646" r="3.5" fill="#0F766E"/>
+<text x="390.5" y="650" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >版本图自动生成</text>
+<text x="390.5" y="668" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >预印本 → 正式版 → 更正</text>
+<circle cx="378.5" cy="692" r="3.5" fill="#0F766E"/>
+<text x="390.5" y="696" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >独立实时 Crossmark 提供方</text>
+<path d="M650.0,451 L670.0,451" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="673.0" y="420" width="290.5" height="320" rx="14" fill="#EEF2FF" stroke="#4338CA" stroke-width="1.3" filter="url(#sh)"/>
+<rect x="673.0" y="420" width="290.5" height="62" rx="14" fill="#4338CA"/>
+<rect x="673.0" y="460" width="290.5" height="22" fill="#4338CA"/>
+<text x="691.0" y="450" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="start" >C · 外部人工治理</text>
+<text x="691.0" y="471" font-size="12" fill="#FFFFFF" font-weight="500" text-anchor="start" opacity="0.85">Human governance</text>
+<circle cx="695.0" cy="508" r="3.5" fill="#4338CA"/>
+<text x="707.0" y="512" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >200+ 真实困难样本</text>
+<text x="707.0" y="530" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >与独立人工裁决</text>
+<circle cx="695.0" cy="554" r="3.5" fill="#4338CA"/>
+<text x="707.0" y="558" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >外部核读者身份、同意</text>
+<text x="707.0" y="576" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >角色与审批</text>
+<circle cx="695.0" cy="600" r="3.5" fill="#4338CA"/>
+<text x="707.0" y="604" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >区分自我声明 / 身份已验证</text>
+<text x="707.0" y="622" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >已核读 / 已裁决</text>
+<circle cx="695.0" cy="646" r="3.5" fill="#4338CA"/>
+<text x="707.0" y="650" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >分歧裁决与撤销均为追加事件</text>
+<path d="M966.5,451 L986.5,451" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="989.5" y="420" width="290.5" height="320" rx="14" fill="#FFF1F2" stroke="#BE123C" stroke-width="1.3" filter="url(#sh)"/>
+<rect x="989.5" y="420" width="290.5" height="62" rx="14" fill="#BE123C"/>
+<rect x="989.5" y="460" width="290.5" height="22" fill="#BE123C"/>
+<text x="1007.5" y="450" font-size="16" fill="#FFFFFF" font-weight="700" text-anchor="start" >D · AI 智能体层</text>
+<text x="1007.5" y="471" font-size="12" fill="#FFFFFF" font-weight="500" text-anchor="start" opacity="0.85">AI agent layer</text>
+<circle cx="1011.5" cy="508" r="3.5" fill="#BE123C"/>
+<text x="1023.5" y="512" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Scout · Citation Checker</text>
+<text x="1023.5" y="530" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Evidence Grader</text>
+<circle cx="1011.5" cy="554" r="3.5" fill="#BE123C"/>
+<text x="1023.5" y="558" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Mechanism Mapper · Review</text>
+<text x="1023.5" y="576" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >Writer · Devil&#x27;s Advocate</text>
+<circle cx="1011.5" cy="600" r="3.5" fill="#BE123C"/>
+<text x="1023.5" y="604" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >只读带证据状态的记录</text>
+<text x="1023.5" y="622" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >不能升级证据状态</text>
+<circle cx="1011.5" cy="646" r="3.5" fill="#BE123C"/>
+<text x="1023.5" y="650" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >外部研究 loop 调用</text>
+<text x="1023.5" y="668" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >research-agent exhaustive</text>
+<text x="40" y="790" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >每一阶段的放行条件 Gates</text>
+<rect x="40.0" y="808" width="295.0" height="100" rx="12" fill="#FFFFFF" stroke="#CBD5E1" filter="url(#sh)"/>
+<rect x="40.0" y="808" width="6" height="100" rx="3" fill="#0F766E"/>
+<text x="62.0" y="838" font-size="15" fill="#0F766E" font-weight="700" text-anchor="start" >G1–G5</text>
+<text x="62.0" y="864" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >检索、去重、状态门、归档、回放</text>
+<text x="62.0" y="888" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >已通过（当前来源范围）</text>
+<rect x="355.0" y="808" width="295.0" height="100" rx="12" fill="#FFFFFF" stroke="#CBD5E1" filter="url(#sh)"/>
+<rect x="355.0" y="808" width="6" height="100" rx="3" fill="#0F766E"/>
+<text x="377.0" y="838" font-size="15" fill="#0F766E" font-weight="700" text-anchor="start" >v0.4</text>
+<text x="377.0" y="864" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >饱和曲线与停止理由必须输出</text>
+<text x="377.0" y="888" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >已通过</text>
+<rect x="670.0" y="808" width="295.0" height="100" rx="12" fill="#FFFFFF" stroke="#CBD5E1" filter="url(#sh)"/>
+<rect x="670.0" y="808" width="6" height="100" rx="3" fill="#B45309"/>
+<text x="692.0" y="838" font-size="15" fill="#B45309" font-weight="700" text-anchor="start" >G6+</text>
+<text x="692.0" y="864" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >全文核读与 claim–evidence 核验</text>
+<text x="692.0" y="888" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >未完成：不产生 claim_verified</text>
+<rect x="985.0" y="808" width="295.0" height="100" rx="12" fill="#FFFFFF" stroke="#CBD5E1" filter="url(#sh)"/>
+<rect x="985.0" y="808" width="6" height="100" rx="3" fill="#BE123C"/>
+<text x="1007.0" y="838" font-size="15" fill="#BE123C" font-weight="700" text-anchor="start" >外部门</text>
+<text x="1007.0" y="864" font-size="12.5" fill="#0F172A" font-weight="400" text-anchor="start" >现实身份、人工裁决、法律批准</text>
+<text x="1007.0" y="888" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >未完成：软件自检不能替代</text>
+<text x="40" y="960" font-size="12.5" fill="#94A3B8" font-weight="500" text-anchor="start" >AI 输出永远不能把记录升级为“外部人工已核读”、claim_verified 或 synthesis_ready。</text>
+<text x="1280" y="960" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="end" >MIT · 2026-11</text>
+</svg>

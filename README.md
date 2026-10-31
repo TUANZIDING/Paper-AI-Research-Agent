@@ -27,31 +27,26 @@ Paper AI Research Agent 是一个基于开放学术 API 的本地、确定性文
 > 本项目不绕过付费墙、登录、robots 或机构权限；不等价替代 Embase、Scopus、
 > Web of Science；`citation_ready=true` 也不代表已阅读全文、研究结论可靠或系统综述检索完整。
 
-## 工作流
+## 系统结构
 
-```mermaid
-flowchart TD
-    A["PubMed + Europe PMC"] --> B["分页检索与显式截断"]
-    B --> C["合并去重与书目核验"]
-    C --> D["撤稿/更正/关注表达式门"]
-    D --> E["evidence_id + SHA-256 归档"]
-    E --> F["进入人工筛选与受限 claim-evidence 绑定"]
-```
+<p align="center">
+  <img src="docs/assets/architecture-v0.4.svg" width="100%" alt="系统结构：输入 → 发现 → 合并核验 → 尽量穷尽扩展 → 合法全文 → 证据输出 → 人工门，右侧为信任边界">
+</p>
 
-纯文本顺序：开放来源 → 分页检索 → 合并与核验 → 出版后状态门 → 哈希证据归档 → 人工筛选。
+一句话主线：**检索式 / 种子 → 多来源发现 → 去重与书目核验 → 出版后状态门 → 引文滚雪球至饱和 → 合法全文分诊 → 哈希证据与导出 → 人工筛选**。
+
+| 层 | 命令 | 核心模块 |
+|---|---|---|
+| 发现与核验 | `search` | `sources.py` · `pipeline.py` · `publication_status.py` |
+| 尽量穷尽检索 | `exhaustive` | `exhaustivev04.py` · `snowballv04.py` · `openalexv04.py` · `crossrefsearchv04.py` · `europepmcgraphv04.py` |
+| 合法全文 | `exhaustive`（OA 分诊）· `download-fulltext` · `discover-licenses` | `openaccessv04.py` · `fulltext.py` · `license_policy.py` |
+| 机构权限（本人） | `institution-links --open-login` | `institutionv04.py` |
+| 证据与回放 | `verify-run` · `--cache-db --offline-replay` | `archive.py` · `cache.py` · `replay.py` |
+| 导出 | `exhaustive` 自动生成 | `exportv04.py`（RIS / BibTeX / ASReview CSV / PRISMA） |
+| PDF 逆向审计 | `audit-pdf-references` | `pdf_audit.py` · `reference_batch.py` |
+| 人工与证据绑定 | `bind-claim` 等 | `claim_evidence.py` · `human_read.py` · `external_review.py` |
 
 ## v0.4 尽量穷尽检索（`exhaustive`）
-
-```mermaid
-flowchart TD
-    S["PubMed + Europe PMC + OpenAlex + Crossref"] --> D["合并去重与摘要补全"]
-    D --> K["关键词预筛（可审计规则）"]
-    K --> R["多轮前后向引文滚雪球"]
-    R --> T{"本轮新增相关 ≤ 阈值？"}
-    T -- 否 --> R
-    T -- 是 --> O["合法 OA 分诊：Europe PMC OA + Unpaywall"]
-    O --> X["RIS / BibTeX / ASReview CSV / PRISMA 数字 / 需机构权限清单"]
-```
 
 ```bash
 export RESEARCH_AGENT_EMAIL="你的联系邮箱"   # Unpaywall 需要；只走环境变量，不写入归档
@@ -243,6 +238,14 @@ python3 -m compileall -q src scripts tests
 
 2026-07-26 快照：测试数以当前 CI 输出为准；6 条 golden seed；另有 240 条
 确定性合成契约/对抗用例。后者不是独立人工裁决黄金集。
+
+## 路线图
+
+<p align="center">
+  <img src="docs/assets/roadmap-v0.4.svg" width="100%" alt="路线图：已发布 v0.3.1、v0.3.2–0.3.3、v0.4.0；计划 A 检索可靠性、B 全文与证据、C 外部人工治理、D AI 智能体层">
+</p>
+
+下一步按 **A 检索可靠性与覆盖 → B 全文与证据生产化 → C 外部人工治理** 推进，**D AI 智能体层**只消费已过门数据。详见 [实施路线](docs/ROADMAP.md)。
 
 ## 尚未完成
 

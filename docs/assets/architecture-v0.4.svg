@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 1290" width="1320" height="1290" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC', 'Microsoft YaHei', 'Segoe UI', sans-serif">
+<defs>
+  <filter id="sh" x="-5%" y="-5%" width="110%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.07"/></filter>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/></marker>
+  <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0F766E"/></marker>
+  <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B45309"/></marker>
+  <linearGradient id="hdr" x1="0" x2="1"><stop offset="0" stop-color="#0F766E"/><stop offset="1" stop-color="#155E75"/></linearGradient>
+</defs>
+<rect width="1320" height="1290" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1320" height="96" fill="url(#hdr)"/>
+<text x="40" y="46" font-size="26" fill="#FFFFFF" font-weight="700" text-anchor="start" >Paper AI Research Agent · 系统结构</text>
+<text x="40" y="74" font-size="14" fill="#CCFBF1" font-weight="500" text-anchor="start" >v0.4.0 · 从检索式到人工筛选的可审计流水线　|　Auditable pipeline from query to human screening</text>
+<rect x="40" y="124" width="150" height="92" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="154" r="14" fill="#0F766E"/>
+<text x="68" y="159" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >1</text>
+<text x="92" y="159" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >输入</text>
+<text x="56" y="182" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Inputs</text>
+<rect x="210" y="124" width="266.0" height="92" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226" y="152" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >布尔检索式</text>
+<text x="226" y="176" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >PubMed / Europe PMC 语法</text>
+<text x="226" y="197" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >search · exhaustive</text>
+<rect x="492.0" y="124" width="266.0" height="92" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="508.0" y="152" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >种子文献</text>
+<text x="508.0" y="176" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >DOI / PMID 列表</text>
+<text x="508.0" y="197" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >--seed · 默认取检索结果作种子</text>
+<rect x="774.0" y="124" width="266.0" height="92" rx="12" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.4" filter="url(#sh)"/>
+<text x="790.0" y="152" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >本地 PDF</text>
+<text x="790.0" y="176" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >编号制参考文献</text>
+<text x="790.0" y="197" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >audit-pdf-references</text>
+<rect x="992.0" y="136" width="36.0" height="22" rx="11" fill="#4338CA" opacity="0.12"/>
+<text x="1010.0" y="151" font-size="11.5" fill="#4338CA" font-weight="600" text-anchor="middle" >审计</text>
+<rect x="40" y="250" width="150" height="104" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="280" r="14" fill="#0F766E"/>
+<text x="68" y="285" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >2</text>
+<text x="92" y="285" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >发现</text>
+<text x="56" y="308" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Discovery</text>
+<rect x="210" y="250" width="407.0" height="104" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226" y="278" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >布尔来源（完整分页）</text>
+<text x="226" y="302" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >PubMed · History Server WebEnv</text>
+<text x="226" y="323" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >Europe PMC · cursor 分页</text>
+<text x="226" y="344" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >状态：complete / truncated / partial</text>
+<rect x="578.0" y="262" width="27.0" height="22" rx="11" fill="#0F766E" opacity="0.12"/>
+<text x="591.5" y="277" font-size="11.5" fill="#0F766E" font-weight="600" text-anchor="middle" >v0.3</text>
+<rect x="633.0" y="250" width="407.0" height="104" rx="12" fill="#FFFFFF" stroke="#B45309" stroke-width="1.4" filter="url(#sh)"/>
+<text x="649.0" y="278" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >排序来源（前 N 条）</text>
+<text x="649.0" y="302" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >OpenAlex · Crossref 自由文本</text>
+<text x="649.0" y="323" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >排名截断显式标注 truncated</text>
+<text x="649.0" y="344" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >无 key 的 429 记为来源问题</text>
+<rect x="1001.0" y="262" width="27.0" height="22" rx="11" fill="#B45309" opacity="0.12"/>
+<text x="1014.5" y="277" font-size="11.5" fill="#B45309" font-weight="600" text-anchor="middle" >v0.4</text>
+<path d="M343.0,216 L343.0,246" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<path d="M625.0,216 L625.0,246" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="40" y="388" width="150" height="96" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="418" r="14" fill="#0F766E"/>
+<text x="68" y="423" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >3</text>
+<text x="92" y="423" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >合并核验</text>
+<text x="56" y="446" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Merge &amp; verify</text>
+<rect x="210" y="388" width="255.33333333333334" height="96" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226" y="416" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >去重</text>
+<text x="226" y="440" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >DOI / PMID / 规范化题名</text>
+<text x="226" y="461" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >冲突保留并阻断</text>
+<rect x="497.33333333333337" y="388" width="255.33333333333334" height="96" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="513.3333333333334" y="416" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >书目核验</text>
+<text x="513.3333333333334" y="440" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >NCBI · Crossref 匹配</text>
+<text x="513.3333333333334" y="461" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >字段级 provenance</text>
+<rect x="784.6666666666667" y="388" width="255.33333333333334" height="96" rx="12" fill="#FFFFFF" stroke="#BE123C" stroke-width="1.4" filter="url(#sh)"/>
+<text x="800.6666666666667" y="416" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >出版后状态门</text>
+<text x="800.6666666666667" y="440" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >撤稿 · 更正 · 关注表达式</text>
+<text x="800.6666666666667" y="461" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >查询不全 → 失败关闭</text>
+<rect x="1005.5" y="400" width="22.5" height="22" rx="11" fill="#BE123C" opacity="0.12"/>
+<text x="1016.75" y="415" font-size="11.5" fill="#BE123C" font-weight="600" text-anchor="middle" >门</text>
+<path d="M467.33333333333337,436.0 L493.33333333333337,436.0" stroke="#0F766E" stroke-width="1.8" fill="none" marker-end="url(#art)"/>
+<path d="M754.6666666666667,436.0 L780.6666666666667,436.0" stroke="#0F766E" stroke-width="1.8" fill="none" marker-end="url(#art)"/>
+<path d="M337.6666666666667,354 L337.6666666666667,384" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<path d="M693.0,354 L693.0,368 L351.6666666666667,368 L351.6666666666667,384" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<path d="M1042,170 L1062,170 L1062,372 L712.6666666666667,372 L712.6666666666667,384" stroke="#4338CA" stroke-width="1.8" fill="none" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+<text x="1054" y="366" font-size="11.5" fill="#4338CA" font-weight="600" text-anchor="end" >PDF 逐条书目查询</text>
+<rect x="40" y="520" width="150" height="200" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="550" r="14" fill="#0F766E"/>
+<text x="68" y="555" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >4</text>
+<text x="92" y="555" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >扩展</text>
+<text x="56" y="578" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Expand · exhaustive</text>
+<rect x="210" y="520" width="830" height="200" rx="14" fill="#FFFBEB" stroke="#B45309" stroke-width="1.2" stroke-dasharray="6 5"/>
+<text x="226" y="546" font-size="13.5" fill="#B45309" font-weight="700" text-anchor="start" >尽量穷尽检索 exhaustive（v0.4）</text>
+<rect x="234" y="566" width="230" height="120" rx="12" fill="#FFFFFF" stroke="#B45309" stroke-width="1.4" filter="url(#sh)"/>
+<text x="250" y="594" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >关键词预筛</text>
+<text x="250" y="618" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >--require 同义词组 AND</text>
+<text x="250" y="639" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >--exclude 排除误命中</text>
+<text x="250" y="660" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >--exclude-unless 挽救</text>
+<rect x="514" y="566" width="230" height="120" rx="12" fill="#FFFFFF" stroke="#B45309" stroke-width="1.4" filter="url(#sh)"/>
+<text x="530" y="594" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >引文滚雪球</text>
+<text x="530" y="618" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >Europe PMC / OpenAlex 引文图</text>
+<text x="530" y="639" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >前向被引 + 后向参考</text>
+<text x="530" y="660" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >每轮候选上限可调</text>
+<rect x="794" y="566" width="230" height="120" rx="12" fill="#FFFFFF" stroke="#B45309" stroke-width="1.4" filter="url(#sh)"/>
+<text x="810" y="594" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >饱和判断</text>
+<text x="810" y="618" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >本轮新增相关 ≤ 阈值？</text>
+<text x="810" y="639" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >是 → 停止，输出曲线</text>
+<text x="810" y="660" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >否 → 新增作为下一轮前沿</text>
+<path d="M466,626 L510,626" stroke="#B45309" stroke-width="1.8" fill="none" marker-end="url(#ara)"/>
+<path d="M746,626 L790,626" stroke="#B45309" stroke-width="1.8" fill="none" marker-end="url(#ara)"/>
+<path d="M909.0,688 L909.0,704 L629.0,704 L629.0,692" stroke="#B45309" stroke-width="1.8" fill="none" marker-end="url(#ara)"/>
+<text x="769.0" y="699" font-size="11" fill="#B45309" font-weight="600" text-anchor="middle" >未饱和：下一轮</text>
+<path d="M912.3333333333334,484 L912.3333333333334,516" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="40" y="756" width="150" height="112" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="786" r="14" fill="#0F766E"/>
+<text x="68" y="791" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >5</text>
+<text x="92" y="791" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >全文</text>
+<text x="56" y="814" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Lawful full text</text>
+<rect x="210" y="756" width="407.0" height="112" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226" y="784" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >合法开放获取</text>
+<text x="226" y="808" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >Europe PMC OA · Unpaywall</text>
+<text x="226" y="829" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >仅 CC BY / BY-SA / CC0 / 公有领域</text>
+<text x="226" y="850" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >安全下载器：HTTPS · SSRF · robots · 签名</text>
+<rect x="542.0" y="768" width="63.0" height="22" rx="11" fill="#0F766E" opacity="0.12"/>
+<text x="573.5" y="783" font-size="11.5" fill="#0F766E" font-weight="600" text-anchor="middle" >自动下载</text>
+<rect x="633.0" y="756" width="407.0" height="112" rx="12" fill="#FFFFFF" stroke="#BE123C" stroke-width="1.4" filter="url(#sh)"/>
+<text x="649.0" y="784" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >需机构权限清单</text>
+<text x="649.0" y="808" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >本机构档案（不含任何凭据）</text>
+<text x="649.0" y="829" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >--open-login：本人浏览器 CARSI / WebVPN</text>
+<text x="649.0" y="850" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >逐篇手动打开；不自动登录或批量下载</text>
+<rect x="965.0" y="768" width="63.0" height="22" rx="11" fill="#BE123C" opacity="0.12"/>
+<text x="996.5" y="783" font-size="11.5" fill="#BE123C" font-weight="600" text-anchor="middle" >本人操作</text>
+<path d="M625.0,720 L625.0,752" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="40" y="904" width="150" height="112" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="934" r="14" fill="#0F766E"/>
+<text x="68" y="939" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >6</text>
+<text x="92" y="939" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >证据输出</text>
+<text x="56" y="962" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Evidence &amp; exports</text>
+<rect x="210" y="904" width="407.0" height="112" rx="12" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226" y="932" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >证据归档</text>
+<text x="226" y="956" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >evidence_id + SHA-256 + manifest</text>
+<text x="226" y="977" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >SQLite 缓存 · 严格离线回放 · --resume</text>
+<text x="226" y="998" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >verify-run 校验文件一致性</text>
+<rect x="633.0" y="904" width="407.0" height="112" rx="12" fill="#FFFFFF" stroke="#B45309" stroke-width="1.4" filter="url(#sh)"/>
+<text x="649.0" y="932" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >导出</text>
+<text x="649.0" y="956" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >RIS / BibTeX → Zotero</text>
+<text x="649.0" y="977" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >ASReview CSV（included 留空）</text>
+<text x="649.0" y="998" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >PRISMA 数字 · 饱和曲线 · 报告</text>
+<rect x="1001.0" y="916" width="27.0" height="22" rx="11" fill="#B45309" opacity="0.12"/>
+<text x="1014.5" y="931" font-size="11.5" fill="#B45309" font-weight="600" text-anchor="middle" >v0.4</text>
+<path d="M625.0,868 L625.0,900" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="40" y="1052" width="150" height="96" rx="12" fill="#F8FAFC"/>
+<circle cx="68" cy="1082" r="14" fill="#0F766E"/>
+<text x="68" y="1087" font-size="13" fill="#FFFFFF" font-weight="700" text-anchor="middle" >7</text>
+<text x="92" y="1087" font-size="15" fill="#0F172A" font-weight="700" text-anchor="start" >人工门</text>
+<text x="56" y="1110" font-size="11.5" fill="#94A3B8" font-weight="500" text-anchor="start" >Human gates</text>
+<rect x="210.0" y="1052" width="186.5" height="96" rx="12" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.4" filter="url(#sh)"/>
+<text x="226.0" y="1080" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >题摘筛选</text>
+<text x="226.0" y="1104" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >ASReview / Zotero</text>
+<text x="226.0" y="1125" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >人工纳排</text>
+<rect x="424.5" y="1052" width="186.5" height="96" rx="12" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.4" filter="url(#sh)"/>
+<text x="440.5" y="1080" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >全文核读</text>
+<text x="440.5" y="1104" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >合法取得的全文</text>
+<text x="440.5" y="1125" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >自我声明 ≠ 身份验证</text>
+<path d="M398.5,1100.0 L420.5,1100.0" stroke="#4338CA" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="639.0" y="1052" width="186.5" height="96" rx="12" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.4" filter="url(#sh)"/>
+<text x="655.0" y="1080" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >证据绑定</text>
+<text x="655.0" y="1104" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >claim–evidence</text>
+<text x="655.0" y="1125" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >页码 / 段落 + 哈希</text>
+<path d="M613.0,1100.0 L635.0,1100.0" stroke="#4338CA" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="853.5" y="1052" width="186.5" height="96" rx="12" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.4" filter="url(#sh)"/>
+<text x="869.5" y="1080" font-size="15" fill="#0F172A" font-weight="650" text-anchor="start" >下游</text>
+<text x="869.5" y="1104" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >综述写作</text>
+<text x="869.5" y="1125" font-size="12.5" fill="#475569" font-weight="400" text-anchor="start" >research-evidence</text>
+<path d="M827.5,1100.0 L849.5,1100.0" stroke="#4338CA" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<path d="M625.0,1016 L625.0,1048" stroke="#94A3B8" stroke-width="1.8" fill="none" marker-end="url(#ar)"/>
+<rect x="1080" y="250" width="200" height="898" rx="14" fill="#FFF1F2" stroke="#BE123C" stroke-width="1" stroke-opacity="0.4"/>
+<text x="1180.0" y="282" font-size="16" fill="#BE123C" font-weight="700" text-anchor="middle" >信任边界</text>
+<text x="1180.0" y="302" font-size="11.5" fill="#BE123C" font-weight="500" text-anchor="middle" opacity="0.75">Trust boundary</text>
+<circle cx="1104" cy="335" r="4" fill="#BE123C"/>
+<text x="1116" y="340" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >外部数据不可信</text>
+<text x="1116" y="362" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >摘要、全文、元数据</text>
+<circle cx="1104" cy="447" r="4" fill="#BE123C"/>
+<text x="1116" y="452" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >失败关闭</text>
+<text x="1116" y="474" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >未知 ≠ 安全</text>
+<circle cx="1104" cy="559" r="4" fill="#BE123C"/>
+<text x="1116" y="564" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >不绕付费墙</text>
+<text x="1116" y="586" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >不登录 · 不碰凭据</text>
+<circle cx="1104" cy="671" r="4" fill="#BE123C"/>
+<text x="1116" y="676" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >citation_ready</text>
+<text x="1116" y="698" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >≠ 已读全文或结论可靠</text>
+<circle cx="1104" cy="783" r="4" fill="#BE123C"/>
+<text x="1116" y="788" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >饱和</text>
+<text x="1116" y="810" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >≠ 系统综述检索完整</text>
+<circle cx="1104" cy="895" r="4" fill="#BE123C"/>
+<text x="1116" y="900" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >开放源</text>
+<text x="1116" y="922" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >≠ Embase / WoS / Scopus</text>
+<circle cx="1104" cy="1007" r="4" fill="#BE123C"/>
+<text x="1116" y="1012" font-size="13.5" fill="#0F172A" font-weight="650" text-anchor="start" >AI 输出</text>
+<text x="1116" y="1034" font-size="12" fill="#475569" font-weight="400" text-anchor="start" >不能升级证据状态</text>
+<rect x="210" y="1184" width="22" height="14" rx="4" fill="#FFFFFF" stroke="#0F766E" stroke-width="1.6"/>
+<text x="240" y="1196" font-size="12.5" fill="#475569" font-weight="500" text-anchor="start" >v0.3 内核</text>
+<rect x="380" y="1184" width="22" height="14" rx="4" fill="#FFFFFF" stroke="#B45309" stroke-width="1.6"/>
+<text x="410" y="1196" font-size="12.5" fill="#475569" font-weight="500" text-anchor="start" >v0.4 新增</text>
+<rect x="550" y="1184" width="22" height="14" rx="4" fill="#FFFFFF" stroke="#BE123C" stroke-width="1.6"/>
+<text x="580" y="1196" font-size="12.5" fill="#475569" font-weight="500" text-anchor="start" >门控 / 边界</text>
+<rect x="720" y="1184" width="22" height="14" rx="4" fill="#FFFFFF" stroke="#4338CA" stroke-width="1.6"/>
+<text x="750" y="1196" font-size="12.5" fill="#475569" font-weight="500" text-anchor="start" >审计与人工</text>
+<text x="1280" y="1196" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="end" >实线：数据流　虚线：PDF 审计 / 迭代</text>
+<text x="40" y="1250" font-size="12" fill="#94A3B8" font-weight="500" text-anchor="start" >github.com/TUANZIDING/Paper-AI-Research-Agent · MIT</text>
+</svg>
