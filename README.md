@@ -27,24 +27,28 @@ Paper AI Research Agent 是一个基于开放学术 API 的本地、确定性文
 > 本项目不绕过付费墙、登录、robots 或机构权限；不等价替代 Embase、Scopus、
 > Web of Science；`citation_ready=true` 也不代表已阅读全文、研究结论可靠或系统综述检索完整。
 
-## 系统结构
+## 总体流程
 
 <p align="center">
-  <img src="docs/assets/architecture-v0.4.svg" width="100%" alt="系统结构：输入 → 发现 → 合并核验 → 尽量穷尽扩展 → 合法全文 → 证据输出 → 人工门，右侧为信任边界">
+  <img src="docs/assets/workflow-v0.4.svg" width="100%" alt="总体流程：主题检索、已有论文 PDF、单篇 DOI、官方来源四个入口，经发现、身份核验、出版后状态门、合法全文、证据绑定、人工门，右侧为证据状态阶梯，底部为审计底座">
 </p>
 
-一句话主线：**检索式 / 种子 → 多来源发现 → 去重与书目核验 → 出版后状态门 → 引文滚雪球至饱和 → 合法全文分诊 → 哈希证据与导出 → 人工筛选**。
+四个入口（主题检索、已有论文 PDF、单篇 DOI、官方来源）汇入同一条证据链：**发现 → 身份核验 → 出版后状态门 → `citation_ready` → 合法全文 → claim–evidence 位置绑定 → 人工门**。每升一级都有对应命令和失败关闭条件；`claim_verified` / `synthesis_ready` 不由软件产生。
 
 | 层 | 命令 | 核心模块 |
 |---|---|---|
 | 发现与核验 | `search` | `sources.py` · `pipeline.py` · `publication_status.py` |
+| 单篇出版后状态 | `check-status` · `check-crossmark` | `publication_status.py` · `crossmark.py` |
 | 尽量穷尽检索 | `exhaustive` | `exhaustivev04.py` · `snowballv04.py` · `openalexv04.py` · `crossrefsearchv04.py` · `europepmcgraphv04.py` |
 | 合法全文 | `exhaustive`（OA 分诊）· `download-fulltext` · `discover-licenses` | `openaccessv04.py` · `fulltext.py` · `license_policy.py` |
 | 机构权限（本人） | `institution-links --open-login` | `institutionv04.py` |
 | 证据与回放 | `verify-run` · `--cache-db --offline-replay` | `archive.py` · `cache.py` · `replay.py` |
 | 导出 | `exhaustive` 自动生成 | `exportv04.py`（RIS / BibTeX / ASReview CSV / PRISMA） |
 | PDF 逆向审计 | `audit-pdf-references` | `pdf_audit.py` · `reference_batch.py` |
-| 人工与证据绑定 | `bind-claim` 等 | `claim_evidence.py` · `human_read.py` · `external_review.py` |
+| 官方来源候选 | `register-official-source` · `propose-official-source` | `official_sources.py` |
+| 证据绑定 | `bind-claim` | `claim_evidence.py` |
+| 人工门 | `attest-read` · `rescind-read` · `verify-read-log` · `prepare-review-packet` · `verify-review-signature` | `human_read.py` · `external_review.py` |
+| 可靠性评测 | 测试套件 | `evaluation.py`（golden seed + 240 条合成用例） |
 
 ## v0.4 尽量穷尽检索（`exhaustive`）
 
