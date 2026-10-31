@@ -11,3 +11,5 @@ pdf-audits/
 *.sqlite-shm
 *.sqlite-wal
 .env
+local-config/
+*.local.json

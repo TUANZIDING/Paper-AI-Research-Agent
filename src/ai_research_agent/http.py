@@ -43,6 +43,7 @@ class JsonHttpClient:
         archive: ResponseArchive | None = None,
         cache: HttpCache | None = None,
         offline: bool = False,
+        reuse_cache: bool = False,
     ):
         if archive_dir is not None and archive is not None:
             raise ValueError("Pass archive_dir or archive, not both")
@@ -58,6 +59,11 @@ class JsonHttpClient:
         self.cache = cache
         self.offline = offline
         self.replay = ReplayProvider(cache) if offline and cache is not None else None
+        # Read-through resume: serve already-cached responses, fetch only misses.
+        if reuse_cache and cache is None:
+            raise ValueError("reuse_cache requires a cache")
+        self.reuse = ReplayProvider(cache) if reuse_cache and not offline and cache is not None else None
+        self.cache_hits = 0
         self.last_fetched_at: str | None = None
         self.last_response_sha256: str | None = None
         self._last_request_at = 0.0
@@ -69,11 +75,19 @@ class JsonHttpClient:
         accept: str,
         max_bytes: int | None = None,
     ) -> bytes:
+        cached = None
         if self.replay is not None:
             try:
                 cached = self.replay.get_response(url, accept=accept)
             except ReplayError as exc:
                 raise RemoteServiceError(str(exc)) from exc
+        elif self.reuse is not None:
+            try:
+                cached = self.reuse.get_response(url, accept=accept)
+                self.cache_hits += 1
+            except ReplayError:
+                cached = None
+        if cached is not None:
             if max_bytes is not None and len(cached.body) > max_bytes:
                 raise RemoteServiceError(
                     f"Cached response exceeds {max_bytes} byte limit"

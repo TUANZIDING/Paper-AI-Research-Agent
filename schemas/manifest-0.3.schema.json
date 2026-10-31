@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/ai-research-agent/schemas/manifest-0.3.schema.json",
   "title": "AI Research Agent run manifest 0.3",
-  "description": "Active manifest contract for the v0.3 reliability baseline.",
+  "description": "Manifest contract for the v0.3 reliability baseline (superseded by 0.4 for new runs).",
   "type": "object",
   "required": [
     "schema_version",
