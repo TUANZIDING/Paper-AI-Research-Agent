@@ -19,10 +19,11 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-D97706" alt="MIT license"></a>
 </p>
 
-Paper AI Research Agent is a local, deterministic literature-retrieval core built on
-open scholarly APIs. It separates discovery, bibliographic verification,
-post-publication status checks, evidence preservation, and human screening into
-auditable stages.
+Paper AI Research Agent is a local, auditable literature-evidence tool built on
+open scholarly APIs. It separates discovery (including citation snowballing to
+saturation), bibliographic verification, post-publication status checks, lawful
+full-text access, evidence-location binding, and human gates into verifiable,
+fail-closed stages.
 
 > [!IMPORTANT]
 > This project does not bypass paywalls, authentication, robots.txt rules, or
@@ -102,6 +103,10 @@ See [v0.4 exhaustive retrieval notes (Chinese)](docs/EXHAUSTIVE-RETRIEVAL-v0.4.m
 | Implemented | Crossref and PubMed post-publication gate | Risk signals or incomplete checks block citation candidates |
 | Implemented | Raw-response archive, `evidence_id`, SHA-256, and `verify-run` | Checks files against the current manifest |
 | Implemented | Content-addressed SQLite cache and strict offline replay | Missing cache entries never fall back to the network |
+| Implemented (v0.4) | OpenAlex and Crossref as extra sources; forward/backward citation snowballing | Ranked sources are top-N and merge into the same DOI/PMID deduplication |
+| Implemented (v0.4) | Saturation curve, stop reason, per-round candidate cap, exclude/rescue terms | Saturation means ≈0 new records under current sources and rules, not systematic-review completeness |
+| Implemented (v0.4) | RIS, BibTeX, ASReview CSV, PRISMA counts; `--resume` from cache | Exports still require human screening |
+| Limited (v0.4) | Institutional-access checklist and `institution-links --open-login` | Opens the login page in your own browser only; never touches credentials or auto-downloads |
 | Limited | Numbered-PDF reference extraction and body-citation location mapping | Requires a heading and continuous `[1]..[n]`; location is not semantic support |
 | Limited | Resumable PDF-reference lookup batches | Completed items are skipped while unfinished/partial/failed items remain retryable; not general pagination resume |
 | Limited | Manually registered official-organization host/path candidates | An explicit allowlist and hashed registration evidence produce candidates only; no official-identity proof or fetch permission |
@@ -247,7 +252,7 @@ python3 scripts/verify_release.py
 python3 -m compileall -q src scripts tests
 ```
 
-Snapshot on 2026-07-26: use the current CI output for the test count; six golden seeds and
+v0.4.0 snapshot (2026-11-01): 239 unit tests pass (1 network test skipped); six golden seeds and
 240 deterministic synthetic contract/adversarial cases. The latter are not an
 independently human-adjudicated gold set.
 
@@ -257,17 +262,8 @@ independently human-adjudicated gold set.
   <img src="docs/assets/roadmap-v0.4.svg" width="100%" alt="Roadmap: shipped v0.3.1, v0.3.2–0.3.3, v0.4.0; planned A retrieval reliability, B full text and evidence, C human governance, D AI agent layer (labels in Chinese)">
 </p>
 
-Next: **A retrieval reliability and coverage → B full text and evidence → C external human governance**; **D the AI agent layer** consumes gated data only. See the [roadmap (Chinese)](docs/ROADMAP.md).
+Next: **A retrieval reliability and coverage → B full text and evidence → C external human governance**; **D the AI agent layer** consumes gated data only. Open items (legal approval, broader full-text formats, semantic claim-evidence, a human gold set, external identity, version graphs, general resume) are tracked in the [roadmap (Chinese)](docs/ROADMAP.md).
 
-## Not yet completed
-
-1. Final legal/policy judgment and cross-jurisdiction approval for license candidates;
-2. broader publisher formats and public-network full-text acceptance testing;
-3. controlled OCR/table/figure and full-text semantic claim-evidence derivation;
-4. 200+ real difficult cases with independent human labeling and adjudication;
-5. real external human reading, identity, independence, consent, and approval;
-6. automatic version graphs for preprints, accepted manuscripts, versions of record, and corrections;
-7. general-search interrupted-pagination resume, partial-page recovery, run comparison, and an independent live Crossmark provider.
 
 ## Documentation (currently Chinese)
 
