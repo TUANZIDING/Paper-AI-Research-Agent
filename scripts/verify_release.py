@@ -544,6 +544,7 @@ def verify_release(root: Path) -> list[str]:
             errors.append(f"{path}: {exc}")
     required_schemas = {
         "manifest-0.2.schema.json", "manifest-0.3.schema.json",
+        "manifest-0.4.schema.json",
         "record.schema.json", "record-0.3.schema.json",
         "human-read-self-attestation-event.schema.json",
         "claim-evidence.schema.json", "external-review-packet.schema.json",
@@ -592,11 +593,11 @@ def verify_release(root: Path) -> list[str]:
             None
             if version == "pdf-reference-audit-0.1"
             else schemas.get(
-                "record-0.3.schema.json" if version == "0.3" else "record.schema.json"
+                "record-0.3.schema.json" if version in {"0.3", "0.4"} else "record.schema.json"
             )
         )
         archived_response_hashes: set[str] = set()
-        if version == "0.3":
+        if version in {"0.3", "0.4"}:
             for metadata_path in sorted(run_dir.glob("raw_responses/*.metadata.json")):
                 try:
                     response = load_json(metadata_path).get("response")
@@ -615,7 +616,7 @@ def verify_release(root: Path) -> list[str]:
                     validate_json_schema(
                         record, record_schema, path=f"{records_path}:{number}"
                     )
-                    if version == "0.3":
+                    if version in {"0.3", "0.4"}:
                         errors.extend(
                             _check_record_semantics(
                                 record,

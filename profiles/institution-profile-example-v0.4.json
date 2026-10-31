@@ -1,0 +1,87 @@
+{
+  "profile_version": "0.4",
+  "institution": "Example University (replace with your own institution)",
+  "federation_entity_id": "https://idp.example.edu/idp/shibboleth",
+  "federation_discovery": "https://ds.carsi.edu.cn/login/index.html",
+  "webvpn_portal": "https://webvpn.example.edu/",
+  "document_delivery": "https://library.example.edu/interlibrary-loan",
+  "platforms": [
+    {
+      "name": "Elsevier ScienceDirect",
+      "doi_prefixes": [
+        "10.1016",
+        "10.1053"
+      ],
+      "hosts": [
+        "sciencedirect.com",
+        "linkinghub.elsevier.com"
+      ],
+      "entry_url": "https://sciencedirect.com/"
+    },
+    {
+      "name": "Wiley Online Library",
+      "doi_prefixes": [
+        "10.1002",
+        "10.1111"
+      ],
+      "hosts": [
+        "onlinelibrary.wiley.com"
+      ],
+      "entry_url": "https://onlinelibrary.wiley.com/"
+    },
+    {
+      "name": "SpringerLink / Springer Nature",
+      "doi_prefixes": [
+        "10.1007",
+        "10.1038"
+      ],
+      "hosts": [
+        "link.springer.com",
+        "nature.com"
+      ],
+      "entry_url": "https://link.springer.com/"
+    },
+    {
+      "name": "Oxford Academic (OUP)",
+      "doi_prefixes": [
+        "10.1093"
+      ],
+      "hosts": [
+        "academic.oup.com"
+      ],
+      "entry_url": "https://academic.oup.com/"
+    },
+    {
+      "name": "ACS Publications",
+      "doi_prefixes": [
+        "10.1021"
+      ],
+      "hosts": [
+        "pubs.acs.org"
+      ],
+      "entry_url": "https://pubs.acs.org/"
+    },
+    {
+      "name": "IEEE Xplore",
+      "doi_prefixes": [
+        "10.1109"
+      ],
+      "hosts": [
+        "ieeexplore.ieee.org"
+      ],
+      "entry_url": "https://ieeexplore.ieee.org/"
+    },
+    {
+      "name": "Ovid / Lippincott (LWW)",
+      "doi_prefixes": [
+        "10.1097"
+      ],
+      "hosts": [
+        "journals.lww.com",
+        "ovid.com"
+      ],
+      "entry_url": "https://journals.lww.com/"
+    }
+  ],
+  "_note": "Fill entry_url with the federated-login (CARSI/Shibboleth/OpenAthens) links your own library publishes. Never put usernames, passwords, cookies or tokens here."
+}

@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml"><img src="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml/badge.svg" alt="Continuous integration status"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 or later">
-  <img src="https://img.shields.io/badge/version-0.3.3-0F766E" alt="Version 0.3.3">
+  <img src="https://img.shields.io/badge/version-0.4.0-0F766E" alt="Version 0.4.0">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-D97706" alt="MIT license"></a>
 </p>
 
@@ -43,6 +43,53 @@ flowchart TD
 
 Plain-text sequence: open sources → paginated retrieval → merge and verification →
 post-publication gate → hashed evidence archive → human screening.
+
+## v0.4 exhaustive-as-feasible retrieval (`exhaustive`)
+
+```mermaid
+flowchart TD
+    S["PubMed + Europe PMC + OpenAlex + Crossref"] --> D["Merge, deduplicate, fill abstracts"]
+    D --> K["Keyword pre-screen (auditable rules)"]
+    K --> R["Multi-round backward/forward citation snowballing"]
+    R --> T{"New relevant records ≤ threshold?"}
+    T -- no --> R
+    T -- yes --> O["Lawful OA triage: Europe PMC OA + Unpaywall"]
+    O --> X["RIS / BibTeX / ASReview CSV / PRISMA counts / institutional-access list"]
+```
+
+```bash
+export RESEARCH_AGENT_EMAIL="your contact email"  # needed for Unpaywall; env only, never archived
+export OPENALEX_API_KEY="optional"                 # without a key OpenAlex may return HTTP 429, logged as a source issue, not 0 hits
+research-agent exhaustive '<PubMed Boolean query>' \
+  --source-query 'europe_pmc=<Europe PMC query>' \
+  --source-query 'openalex=radiation-induced skeletal muscle injury' \
+  --require 'radiat*|irradiat*|radiotherap*' \
+  --require 'muscle*|myopath*|myoblast*' \
+  --all --max-seeds 30 --max-rounds 3 --output runs
+```
+
+Boundaries:
+- Each round logs the frontier, backward/forward links, new unique candidates, new relevant records, truncation and errors; reaching the round cap with new records still appearing is marked **NOT saturated**.
+- **Saturation is not a complete systematic-review search**: Embase, Scopus, Web of Science, Chinese databases, grey literature and human screening are still required.
+- Only CC BY / CC BY-SA / CC0 / public-domain open full text is downloaded; everything else goes to an institutional-access list (institutional access, interlibrary loan, or contacting authors). No paywall, login, or robots bypass.
+- The ASReview `included` column is left blank for human decisions. Semantic Scholar is not yet integrated.
+
+### Institutional access (for your own account only)
+
+The `needs-institutional-access` list can be turned into a manual checklist, `institutional-access-v0.4.html`, using **your own institution's** access profile: each record gets the publisher platform's CARSI/Shibboleth federated-login entry and its DOI link; unmatched records fall back to WebVPN or interlibrary loan.
+
+```bash
+cp profiles/institution-profile-example-v0.4.json ~/.config/research-agent/my-institution-v0.4.json  # fill in the entry links your library publishes
+export RESEARCH_AGENT_INSTITUTION_PROFILE=~/.config/research-agent/my-institution-v0.4.json
+research-agent exhaustive '...' --require '...'            # applied automatically
+research-agent institution-links runs/exhaustive-...        # or rebuild for an existing run
+```
+
+- A profile holds **no usernames, passwords, cookies or tokens**; such fields are rejected. Keep it outside the repository; its path is not written to the manifest.
+- The tool **never logs in, stores sessions, or downloads through institutional access**. The entitled person opens each article (Zotero Connector works well); library licences generally forbid software-driven bulk downloading.
+- Anyone else using this project supplies a profile for **the institution that licenses them**; the repository ships only a generic example.
+
+See [v0.4 exhaustive retrieval notes (Chinese)](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md).
 
 ## Capability status
 
@@ -215,6 +262,7 @@ independently human-adjudicated gold set.
 ## Documentation (currently Chinese)
 
 - [Source and legal boundaries](docs/SOURCE_POLICY.md)
+- [v0.4 exhaustive retrieval](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md)
 - [Acceptance gates](docs/ACCEPTANCE_GATES.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Claim–Evidence location binding](docs/CLAIM_EVIDENCE.md)

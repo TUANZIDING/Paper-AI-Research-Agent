@@ -15,7 +15,7 @@
 <p align="center">
   <a href="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml"><img src="https://github.com/TUANZIDING/Paper-AI-Research-Agent/actions/workflows/ci.yml/badge.svg" alt="持续集成状态"></a>
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 或更高版本">
-  <img src="https://img.shields.io/badge/version-0.3.3-0F766E" alt="版本 0.3.3">
+  <img src="https://img.shields.io/badge/version-0.4.0-0F766E" alt="版本 0.4.0">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-D97706" alt="MIT 许可证"></a>
 </p>
 
@@ -39,6 +39,53 @@ flowchart TD
 ```
 
 纯文本顺序：开放来源 → 分页检索 → 合并与核验 → 出版后状态门 → 哈希证据归档 → 人工筛选。
+
+## v0.4 尽量穷尽检索（`exhaustive`）
+
+```mermaid
+flowchart TD
+    S["PubMed + Europe PMC + OpenAlex + Crossref"] --> D["合并去重与摘要补全"]
+    D --> K["关键词预筛（可审计规则）"]
+    K --> R["多轮前后向引文滚雪球"]
+    R --> T{"本轮新增相关 ≤ 阈值？"}
+    T -- 否 --> R
+    T -- 是 --> O["合法 OA 分诊：Europe PMC OA + Unpaywall"]
+    O --> X["RIS / BibTeX / ASReview CSV / PRISMA 数字 / 需机构权限清单"]
+```
+
+```bash
+export RESEARCH_AGENT_EMAIL="你的联系邮箱"   # Unpaywall 需要；只走环境变量，不写入归档
+export OPENALEX_API_KEY="可选"                # 无 key 时 OpenAlex 可能 HTTP 429，会记为来源问题而非 0 条
+research-agent exhaustive '<PubMed 布尔检索式>' \
+  --source-query 'europe_pmc=<Europe PMC 检索式>' \
+  --source-query 'openalex=radiation-induced skeletal muscle injury' \
+  --require 'radiat*|irradiat*|radiotherap*' \
+  --require 'muscle*|myopath*|myoblast*' \
+  --all --max-seeds 30 --max-rounds 3 --output runs
+```
+
+边界：
+- 每轮记录 frontier、前/后向链接数、新增唯一候选、新增相关、截断与错误；到最大轮数仍有新增时标记 **未饱和**。
+- **饱和不等于系统综述检索完整**：仍需 Embase、Scopus、Web of Science、中文数据库、灰色文献和人工筛选。
+- 只下载 CC BY / CC BY-SA / CC0 / 公有领域许可的开放全文；其余列入“需机构权限”清单，经机构权限、馆际互借或联系作者获取。不绕付费墙、登录或 robots。
+- ASReview CSV 的 `included` 列留空，由人工判定。Semantic Scholar 尚未接入。
+
+### 机构权限（只给你自己的账号用）
+
+`needs-institutional-access` 清单可以按**你自己机构**的访问档案生成手动核对页 `institutional-access-v0.4.html`：每篇文献给出该出版平台的 CARSI/Shibboleth 联邦登录入口和 DOI 链接；没匹配到的走 WebVPN 或馆际互借。
+
+```bash
+cp profiles/institution-profile-example-v0.4.json ~/.config/research-agent/my-institution-v0.4.json  # 填入你所在图书馆公布的入口链接
+export RESEARCH_AGENT_INSTITUTION_PROFILE=~/.config/research-agent/my-institution-v0.4.json
+research-agent exhaustive '...' --require '...'            # 运行时自动套用
+research-agent institution-links runs/exhaustive-...        # 或对已有运行重新生成
+```
+
+- 档案**不含任何账号、密码、Cookie 或令牌**，含这类字段会被拒绝；档案放在仓库外，路径不写入 manifest。
+- 工具**不登录、不保存会话、不通过机构权限自动下载**。逐篇由有权限的本人打开（可配合 Zotero Connector）；图书馆许可普遍禁止用软件批量下载。
+- 其他人使用本项目时，需要提供**自己订阅机构**的档案；仓库只附通用示例。
+
+详见 [v0.4 尽量穷尽检索说明](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md)。
 
 ## 能力状态
 
@@ -206,6 +253,7 @@ python3 -m compileall -q src scripts tests
 ## 文档
 
 - [数据源与合法边界](docs/SOURCE_POLICY.md)
+- [v0.4 尽量穷尽检索](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md)
 - [分阶段验收门](docs/ACCEPTANCE_GATES.md)
 - [实施路线](docs/ROADMAP.md)
 - [Claim–Evidence 位置绑定](docs/CLAIM_EVIDENCE.md)

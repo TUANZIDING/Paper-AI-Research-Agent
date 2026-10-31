@@ -59,6 +59,7 @@ from .reference_batch import (
     run_reference_batch,
 )
 from .sources import CrossrefSource, EuropePmcSource, PubMedSource
+from .exhaustivev04 import ExhaustiveConfig, ExhaustiveRun
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -300,15 +301,56 @@ def build_parser() -> argparse.ArgumentParser:
     pdf_audit.add_argument("--max-bytes", type=int, default=100_000_000)
     pdf_audit.add_argument("--max-pages", type=int, default=500)
     pdf_audit.add_argument("--json", action="store_true")
+
+    links = subparsers.add_parser(
+        "institution-links",
+        help="Rebuild the institutional-access checklist of an exhaustive run from your own profile",
+    )
+    links.add_argument("run_dir", type=Path)
+    links.add_argument("--institution-profile", type=Path)
+
+    exhaustive = subparsers.add_parser(
+        "exhaustive",
+        help="Multi-source search + citation snowballing + saturation + lawful OA triage",
+    )
+    exhaustive.add_argument("query", help="Boolean query for PubMed/Europe PMC; free text for ranked sources")
+    exhaustive.add_argument(
+        "--require", action="append", required=True, metavar="TERM|TERM*",
+        help="Keyword pre-screen group; repeat for AND, separate synonyms with | (prefix*)",
+    )
+    exhaustive.add_argument("--sources", default="pubmed,europe_pmc,openalex,crossref")
+    exhaustive.add_argument("--source-query", action="append", default=[], metavar="SOURCE=QUERY",
+                            help="Override the query for one source (e.g. europe_pmc=...)")
+    exhaustive.add_argument("--limit", type=int, default=2000, help="Cap per Boolean source")
+    exhaustive.add_argument("--all", action="store_true", help="No cap for Boolean sources")
+    exhaustive.add_argument("--ranked-limit", type=int, default=200, help="Cap for OpenAlex/Crossref ranked search")
+    exhaustive.add_argument("--seed", action="append", default=[], help="Seed DOI or PMID (repeatable)")
+    exhaustive.add_argument("--no-seed-from-search", action="store_true")
+    exhaustive.add_argument("--max-seeds", type=int, default=300)
+    exhaustive.add_argument("--graph", choices=("europepmc", "openalex"), default="europepmc")
+    exhaustive.add_argument("--max-rounds", type=int, default=4)
+    exhaustive.add_argument("--per-paper-limit", type=int, default=500)
+    exhaustive.add_argument("--stop-threshold", type=int, default=0)
+    exhaustive.add_argument("--no-oa", action="store_true", help="Skip open-access triage")
+    exhaustive.add_argument("--oa-limit", type=int)
+    exhaustive.add_argument("--download-oa", action="store_true",
+                            help="Download CC BY/CC0-class OA full text only (fail-closed)")
+    exhaustive.add_argument("--download-max", type=int, default=20)
+    exhaustive.add_argument("--institution-profile", type=Path,
+                            help="Your own institution's access profile (JSON, no credentials); "
+                                 "defaults to $RESEARCH_AGENT_INSTITUTION_PROFILE")
+    exhaustive.add_argument("--output", type=Path, default=Path("runs"))
+    exhaustive.add_argument("--no-archive", action="store_true")
+    exhaustive.add_argument("--json", action="store_true")
     return parser
 
 
 def _user_agent() -> str:
     contact = os.getenv("RESEARCH_AGENT_EMAIL")
     return (
-        f"AIResearchAgent/0.3.3 (mailto:{contact})"
+        f"AIResearchAgent/0.4.0 (mailto:{contact})"
         if contact
-        else "AIResearchAgent/0.3.3"
+        else "AIResearchAgent/0.4.0"
     )
 
 
@@ -1000,6 +1042,80 @@ def run_propose_official_source(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_institution_links(args: argparse.Namespace) -> int:
+    from .institutionv04 import ProfileError, load_profile, read_needs_tsv, write_access_outputs
+
+    tsv = args.run_dir / "needs-institutional-access-v0.4.tsv"
+    if not tsv.is_file():
+        raise SystemExit(f"Not an exhaustive v0.4 run directory: {args.run_dir}")
+    try:
+        profile = load_profile(args.institution_profile)
+    except ProfileError as exc:
+        raise SystemExit(str(exc)) from exc
+    if profile is None:
+        raise SystemExit("Pass --institution-profile or set RESEARCH_AGENT_INSTITUTION_PROFILE")
+    counts = write_access_outputs(args.run_dir, read_needs_tsv(tsv), profile)
+    print(json.dumps({"institution": profile.institution, "routes": counts}, ensure_ascii=False))
+    return 0
+
+
+def run_exhaustive(args: argparse.Namespace) -> int:
+    sources = [value.strip() for value in args.sources.split(",") if value.strip()]
+    unknown = set(sources) - {"pubmed", "europe_pmc", "openalex", "crossref"}
+    if unknown or not sources:
+        raise SystemExit(f"Unknown or empty source list: {', '.join(sorted(unknown))}")
+    overrides = {}
+    for item in args.source_query:
+        name, sep, value = item.partition("=")
+        if not sep or name not in sources:
+            raise SystemExit(f"Invalid --source-query: {item!r}")
+        overrides[name] = value
+    started = datetime.now(timezone.utc)
+    stamp = started.strftime("%Y-%m-%dT%H%M%S")
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", args.query).strip("-")[:40] or "query"
+    out_dir = args.output.resolve() / f"exhaustive-{stamp}-{slug}"
+    client = JsonHttpClient(
+        _user_agent(),
+        archive_dir=None if args.no_archive else out_dir / "raw-responses",
+    )
+    config = ExhaustiveConfig(
+        query=args.query,
+        relevance_groups=args.require,
+        sources=sources,
+        source_queries=overrides,
+        limit_per_source=None if args.all else args.limit,
+        ranked_limit=args.ranked_limit,
+        seeds=args.seed,
+        seed_from_search=not args.no_seed_from_search,
+        max_seeds=args.max_seeds,
+        graph=args.graph,
+        max_rounds=args.max_rounds,
+        per_paper_limit=args.per_paper_limit,
+        stop_threshold=args.stop_threshold,
+        oa_check=not args.no_oa,
+        oa_limit=args.oa_limit,
+        download_oa=args.download_oa,
+        download_max=args.download_max,
+        institution_profile=str(args.institution_profile) if args.institution_profile else None,
+    )
+    summary = ExhaustiveRun(client, config).run(out_dir)
+    result = {
+        "run_dir": str(out_dir),
+        "merged_after_dedup": summary["merged_after_dedup"],
+        "screening_records": summary["screening_records"],
+        "auto_excluded_records": summary["auto_excluded_records"],
+        "snowball_saturated": summary["snowball"]["saturated"],
+        "stop_reason": summary["snowball"]["stop_reason"],
+        "issues": len(summary["issues"]),
+    }
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False))
+    else:
+        for key, value in result.items():
+            print(f"{key}: {value}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -1035,6 +1151,10 @@ def main(argv: list[str] | None = None) -> int:
         return run_propose_official_source(args)
     if args.command == "audit-pdf-references":
         return run_audit_pdf_references(args)
+    if args.command == "exhaustive":
+        return run_exhaustive(args)
+    if args.command == "institution-links":
+        return run_institution_links(args)
     parser.error("Unknown command")
     return 2
 

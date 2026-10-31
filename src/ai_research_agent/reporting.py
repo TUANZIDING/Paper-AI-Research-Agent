@@ -28,7 +28,7 @@ def _manifest(
         for details in run.source_pagination.values()
     )
     return {
-        "schema_version": "0.3",
+        "schema_version": "0.4",
         "started_at": started_at,
         "completed_at": datetime.now(timezone.utc).isoformat(),
         "query": run.query,
