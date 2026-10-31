@@ -68,6 +68,8 @@ research-agent exhaustive '<PubMed 布尔检索式>' \
 - 每轮记录 frontier、前/后向链接数、新增唯一候选、新增相关、截断与错误；到最大轮数仍有新增时标记 **未饱和**。
 - **饱和不等于系统综述检索完整**：仍需 Embase、Scopus、Web of Science、中文数据库、灰色文献和人工筛选。
 - 只下载 CC BY / CC BY-SA / CC0 / 公有领域许可的开放全文；其余列入“需机构权限”清单，经机构权限、馆际互借或联系作者获取。不绕付费墙、登录或 robots。
+- 排除规则：`--exclude 'low-level laser|photobiomodulation'` 剔除明显误命中（如低能量激光），`--exclude-unless 'ionizing|radiotherap*'` 让同时提到电离辐射/放疗的记录仍保留；被剔除的记录在 `auto-excluded-v0.4.csv` 中单独标注 `exclusion_rule`，报告给出条数。
+- 每轮候选上限：`--max-candidates-per-round`（默认 5000）；某轮新增唯一候选超过上限时会截断并记录，大主题可提到 10000。
 - ASReview CSV 的 `included` 列留空，由人工判定。Semantic Scholar 尚未接入。
 
 ### 机构权限（只给你自己的账号用）

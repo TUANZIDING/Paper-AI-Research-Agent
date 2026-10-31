@@ -80,6 +80,8 @@ exhaustive-<UTC时间>-<查询词>/
 - Crossref 自由文本检索命中数以百万计，只取前 N 条，状态恒为 `truncated`。
 - OpenAlex 列表接口无密钥时可能返回 HTTP 429；该情况记为来源问题，不当作“0 条结果”。
 - 引文滚雪球只沿有 PMID 的链接扩展；无 PMID 的链接数被计数但未解析。
+- 排除规则：`--exclude 'low-level laser|photobiomodulation'` 剔除明显误命中（如低能量激光），`--exclude-unless 'ionizing|radiotherap*'` 让同时提到电离辐射/放疗的记录仍保留；被剔除的记录在 `auto-excluded-v0.4.csv` 中单独标注 `exclusion_rule`，报告给出条数。
+- 每轮候选上限：`--max-candidates-per-round`（默认 5000）；某轮新增唯一候选超过上限时会截断并记录，大主题可提到 10000。
 - 关键词预筛是透明的粗筛，会有假阳性和假阴性；它不替代人工题目/摘要筛选。
 - Semantic Scholar 尚未接入（留待后续版本）。
 

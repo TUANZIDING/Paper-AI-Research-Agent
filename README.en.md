@@ -72,6 +72,8 @@ Boundaries:
 - Each round logs the frontier, backward/forward links, new unique candidates, new relevant records, truncation and errors; reaching the round cap with new records still appearing is marked **NOT saturated**.
 - **Saturation is not a complete systematic-review search**: Embase, Scopus, Web of Science, Chinese databases, grey literature and human screening are still required.
 - Only CC BY / CC BY-SA / CC0 / public-domain open full text is downloaded; everything else goes to an institutional-access list (institutional access, interlibrary loan, or contacting authors). No paywall, login, or robots bypass.
+- Exclusion rule: `--exclude 'low-level laser|photobiomodulation'` drops obvious false hits (e.g. low-level laser), while `--exclude-unless 'ionizing|radiotherap*'` keeps records that also mention ionizing radiation or radiotherapy; dropped records are tagged `exclusion_rule` in `auto-excluded-v0.4.csv` and counted in the report.
+- Per-round candidate cap: `--max-candidates-per-round` (default 5000); a round exceeding it is truncated and logged. Raise it (e.g. 10000) for large topics.
 - The ASReview `included` column is left blank for human decisions. Semantic Scholar is not yet integrated.
 
 ### Institutional access (for your own account only)

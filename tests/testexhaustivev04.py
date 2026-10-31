@@ -143,6 +143,46 @@ class SnowballTests(unittest.TestCase):
         )
         self.assertEqual(result.rounds[0].papers_truncated, 1)
 
+    def test_candidate_budget_is_configurable_and_validated(self):
+        graph, titles = self.build()
+        with self.assertRaises(ValueError):
+            SnowballEngine(graph, RULE, max_candidates_per_round=0)
+        result = SnowballEngine(graph, RULE, max_rounds=1, max_candidates_per_round=1).run(
+            [Publication(title=titles["1"], pmid="1")]
+        )
+        self.assertTrue(any("budget exceeded" in e for e in result.rounds[0].errors))
+
+    def test_cli_exposes_max_candidates_per_round(self):
+        from ai_research_agent.cli import build_parser
+
+        args = build_parser().parse_args(
+            ["exhaustive", "q", "--require", "radiat*", "--max-candidates-per-round", "10000"]
+        )
+        self.assertEqual(args.max_candidates_per_round, 10000)
+
+    def test_exclusion_rule_with_keep_if(self):
+        rule = RelevanceRule.parse(
+            ["radiat*|irradiat*", "skeletal muscle*"],
+            excludes=["low-level laser|photobiomodulation"],
+            keep_if=["ionizing|radiotherap*"],
+        )
+        self.assertFalse(rule.matches("Low-level laser irradiation of skeletal muscle repair"))
+        self.assertTrue(rule.excluded("Low-level laser irradiation of skeletal muscle repair"))
+        self.assertTrue(rule.matches("Photobiomodulation after radiotherapy damage to skeletal muscle irradiation"))
+        self.assertTrue(rule.matches("Ionizing radiation injures skeletal muscle"))
+        self.assertEqual(rule.exclusion_summary()["keep_if"], ["ionizing", "radiotherap*"])
+        with self.assertRaises(ValueError):
+            RelevanceRule.parse(["radiat*"], keep_if=["ionizing"])
+
+    def test_cli_exposes_exclusion_flags(self):
+        from ai_research_agent.cli import build_parser
+
+        args = build_parser().parse_args(
+            ["exhaustive", "q", "--require", "radiat*", "--exclude", "laser*", "--exclude-unless", "ionizing"]
+        )
+        self.assertEqual(args.exclude, ["laser*"])
+        self.assertEqual(args.exclude_unless, ["ionizing"])
+
     def test_graph_errors_are_recorded_not_hidden(self):
         class Broken(FakeGraph):
             def forward(self, pmid, limit):

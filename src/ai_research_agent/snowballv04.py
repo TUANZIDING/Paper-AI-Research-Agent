@@ -56,12 +56,30 @@ class RelevanceRule:
 
     A term ending in ``*`` is a word-prefix match (``irradiat*``); other terms
     are matched as whole words or phrases. Matching is case-insensitive.
+
+    Optional exclusion: a record that matches any ``excludes`` term is rejected
+    unless it also matches one of the ``keep_if`` terms (for example, drop
+    low-level laser papers unless they also mention ionizing radiation).
     """
 
     groups: tuple[tuple[str, ...], ...]
+    excludes: tuple[str, ...] = ()
+    keep_if: tuple[str, ...] = ()
+
+    @staticmethod
+    def _terms(specs: Iterable[str] | None) -> tuple[str, ...]:
+        terms: list[str] = []
+        for spec in specs or ():
+            terms.extend(term.strip() for term in spec.split("|") if term.strip())
+        return tuple(dict.fromkeys(terms))
 
     @classmethod
-    def parse(cls, specs: Iterable[str]) -> "RelevanceRule":
+    def parse(
+        cls,
+        specs: Iterable[str],
+        excludes: Iterable[str] | None = None,
+        keep_if: Iterable[str] | None = None,
+    ) -> "RelevanceRule":
         groups = []
         for spec in specs:
             terms = tuple(term.strip() for term in spec.split("|") if term.strip())
@@ -69,7 +87,11 @@ class RelevanceRule:
                 groups.append(terms)
         if not groups:
             raise ValueError("At least one relevance group is required")
-        return cls(tuple(groups))
+        keep = cls._terms(keep_if)
+        exclude = cls._terms(excludes)
+        if keep and not exclude:
+            raise ValueError("--exclude-unless needs at least one --exclude term")
+        return cls(tuple(groups), exclude, keep)
 
     @staticmethod
     def _pattern(term: str) -> re.Pattern[str]:
@@ -77,15 +99,26 @@ class RelevanceRule:
             return re.compile(r"\b" + re.escape(term[:-1].casefold()) + r"\w*")
         return re.compile(r"\b" + re.escape(term.casefold()) + r"\b")
 
+    def _any(self, terms: Iterable[str], haystack: str) -> bool:
+        return any(self._pattern(term).search(haystack) for term in terms)
+
+    def excluded(self, text: str) -> bool:
+        """True when an exclusion term hits and no keep-if term rescues it."""
+        if not self.excludes:
+            return False
+        haystack = text.casefold()
+        return self._any(self.excludes, haystack) and not self._any(self.keep_if, haystack)
+
     def matches(self, text: str) -> bool:
         haystack = text.casefold()
-        return all(
-            any(self._pattern(term).search(haystack) for term in group)
-            for group in self.groups
-        )
+        included = all(self._any(group, haystack) for group in self.groups)
+        return included and not self.excluded(text)
 
     def to_list(self) -> list[str]:
         return ["|".join(group) for group in self.groups]
+
+    def exclusion_summary(self) -> dict[str, list[str]]:
+        return {"exclude": list(self.excludes), "keep_if": list(self.keep_if)}
 
 
 class CitationGraph(Protocol):
@@ -145,7 +178,7 @@ class SnowballEngine:
         progress_path: str | None = None,
     ):
         self.progress_path = progress_path
-        if max_rounds < 1 or per_paper_limit < 1 or stop_threshold < 0:
+        if max_rounds < 1 or per_paper_limit < 1 or stop_threshold < 0 or max_candidates_per_round < 1:
             raise ValueError("Invalid snowball limits")
         if not set(directions) <= {"backward", "forward"} or not directions:
             raise ValueError("directions must be backward and/or forward")

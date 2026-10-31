@@ -54,6 +54,8 @@ SCOPE_STATEMENT = (
 class ExhaustiveConfig:
     query: str
     relevance_groups: list[str]
+    exclude_terms: list[str] = field(default_factory=list)
+    exclude_unless: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=lambda: ["pubmed", "europe_pmc", "openalex", "crossref"])
     source_queries: dict[str, str] = field(default_factory=dict)
     limit_per_source: int | None = 2000
@@ -65,6 +67,7 @@ class ExhaustiveConfig:
     max_rounds: int = 4
     per_paper_limit: int = 500
     stop_threshold: int = 0
+    max_candidates_per_round: int = 5000
     oa_check: bool = True
     oa_limit: int | None = None
     download_oa: bool = False
@@ -84,7 +87,9 @@ class ExhaustiveRun:
     def __init__(self, client: JsonHttpClient, config: ExhaustiveConfig):
         self.client = client
         self.config = config
-        self.rule = RelevanceRule.parse(config.relevance_groups)
+        self.rule = RelevanceRule.parse(
+            config.relevance_groups, config.exclude_terms, config.exclude_unless
+        )
         self.graph_meta = EuropePmcGraph(client)
         self.openalex = OpenAlexSource(client)
         self.crossref = CrossrefSearchSource(client)
@@ -195,6 +200,8 @@ class ExhaustiveRun:
                 screening.append((item, "database_boolean_query"))
             elif self.rule.matches(text):
                 screening.append((item, "ranked_source_passed_prescreen"))
+            elif self.rule.excluded(text):
+                auto_excluded.append((item, "ranked_source_exclusion_rule"))
             else:
                 auto_excluded.append((item, "ranked_source_failed_prescreen"))
 
@@ -212,13 +219,17 @@ class ExhaustiveRun:
             max_rounds=self.config.max_rounds,
             per_paper_limit=self.config.per_paper_limit,
             stop_threshold=self.config.stop_threshold,
+            max_candidates_per_round=self.config.max_candidates_per_round,
             progress_path=str(out_dir / "snowball-progress-v0.4.tsv"),
         )
         snowball: SnowballResult = engine.run(seeds, already_seen=merged)
         for item in snowball.relevant:
             screening.append((item, "citation_snowball_passed_prescreen"))
         for item in snowball.not_relevant:
-            auto_excluded.append((item, "citation_snowball_failed_prescreen"))
+            if self.rule.excluded(f"{item.title} {self.abstract_of(item)}"):
+                auto_excluded.append((item, "citation_snowball_exclusion_rule"))
+            else:
+                auto_excluded.append((item, "citation_snowball_failed_prescreen"))
 
         # lawful OA triage for records going to human screening
         decisions = []
@@ -310,6 +321,8 @@ class ExhaustiveRun:
             "config": {**asdict(self.config), "seeds": list(self.config.seeds),
                        "institution_profile": bool(self.config.institution_profile)},
             "relevance_rule": self.rule.to_list(),
+            "exclusion_rule": self.rule.exclusion_summary(),
+            "exclusion_rule_hits": sum(1 for _, note in auto_excluded if note.endswith("exclusion_rule")),
             "sources": source_report,
             "source_contribution": contribution,
             "merged_after_dedup": len(merged),
@@ -350,6 +363,16 @@ def render_report(summary: dict[str, Any]) -> str:
         "",
         f"- Query: `{summary['config']['query']}`",
         f"- Keyword pre-screen (all groups must match): `{' AND '.join('(' + g + ')' for g in summary['relevance_rule'])}`",
+    ]
+    exclusion = summary.get("exclusion_rule") or {}
+    if exclusion.get("exclude"):
+        unless = exclusion.get("keep_if") or []
+        lines.append(
+            f"- Exclusion rule: drop records matching `{'|'.join(exclusion['exclude'])}`"
+            + (f" unless they also match `{'|'.join(unless)}`" if unless else "")
+            + f" ({summary.get('exclusion_rule_hits', 0)} record(s) dropped; listed in auto-excluded-v0.4.csv)"
+        )
+    lines += [
         "",
         "## Sources",
         "",

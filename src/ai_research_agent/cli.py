@@ -322,6 +322,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--require", action="append", required=True, metavar="TERM|TERM*",
         help="Keyword pre-screen group; repeat for AND, separate synonyms with | (prefix*)",
     )
+    exhaustive.add_argument(
+        "--exclude", action="append", default=[], metavar="TERM|TERM*",
+        help="Drop prescreened records matching any of these terms (repeatable)",
+    )
+    exhaustive.add_argument(
+        "--exclude-unless", action="append", default=[], metavar="TERM|TERM*",
+        help="Keep an --exclude hit anyway when it also matches one of these terms",
+    )
     exhaustive.add_argument("--sources", default="pubmed,europe_pmc,openalex,crossref")
     exhaustive.add_argument("--source-query", action="append", default=[], metavar="SOURCE=QUERY",
                             help="Override the query for one source (e.g. europe_pmc=...)")
@@ -334,6 +342,12 @@ def build_parser() -> argparse.ArgumentParser:
     exhaustive.add_argument("--graph", choices=("europepmc", "openalex"), default="europepmc")
     exhaustive.add_argument("--max-rounds", type=int, default=4)
     exhaustive.add_argument("--per-paper-limit", type=int, default=500)
+    exhaustive.add_argument(
+        "--max-candidates-per-round",
+        type=int,
+        default=5000,
+        help="cap on new PMIDs prescreened per snowball round; overflow is reported, never silent",
+    )
     exhaustive.add_argument("--stop-threshold", type=int, default=0)
     exhaustive.add_argument("--no-oa", action="store_true", help="Skip open-access triage")
     exhaustive.add_argument("--oa-limit", type=int)
@@ -1098,6 +1112,8 @@ def run_exhaustive(args: argparse.Namespace) -> int:
     config = ExhaustiveConfig(
         query=args.query,
         relevance_groups=args.require,
+        exclude_terms=args.exclude,
+        exclude_unless=args.exclude_unless,
         sources=sources,
         source_queries=overrides,
         limit_per_source=None if args.all else args.limit,
@@ -1109,6 +1125,7 @@ def run_exhaustive(args: argparse.Namespace) -> int:
         max_rounds=args.max_rounds,
         per_paper_limit=args.per_paper_limit,
         stop_threshold=args.stop_threshold,
+        max_candidates_per_round=args.max_candidates_per_round,
         oa_check=not args.no_oa,
         oa_limit=args.oa_limit,
         download_oa=args.download_oa,
