@@ -212,6 +212,7 @@ class ExhaustiveRun:
             max_rounds=self.config.max_rounds,
             per_paper_limit=self.config.per_paper_limit,
             stop_threshold=self.config.stop_threshold,
+            progress_path=str(out_dir / "snowball-progress-v0.4.tsv"),
         )
         snowball: SnowballResult = engine.run(seeds, already_seen=merged)
         for item in snowball.relevant:

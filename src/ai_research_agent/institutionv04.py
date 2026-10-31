@@ -230,3 +230,64 @@ def write_access_outputs(out_dir: Path, rows: list[dict[str, str]], profile: Ins
     for row in planned:
         counts[row.route] = counts.get(row.route, 0) + 1
     return counts
+
+
+MAX_INTERACTIVE_ARTICLES = 20
+
+
+def login_pages(rows: list[dict[str, str]], profile: InstitutionProfile) -> list[tuple[str, str]]:
+    """Distinct sign-in pages needed for these rows, in first-seen order."""
+
+    pages: dict[str, str] = {}
+    for row in plan_access(rows, profile):
+        if row.route == "federated_login" and row.entry_url not in pages:
+            pages[row.entry_url] = row.platform
+        elif row.route == "webvpn_then_doi" and row.entry_url not in pages:
+            pages[row.entry_url] = "WebVPN"
+    return [(name, url) for url, name in pages.items()]
+
+
+def open_in_browser(
+    rows: list[dict[str, str]],
+    profile: InstitutionProfile,
+    *,
+    open_login: bool = True,
+    open_articles: int = 0,
+    opener=None,
+    ask=input,
+    interactive: bool | None = None,
+) -> dict[str, int]:
+    """Pop up sign-in pages (and optionally articles) in the user's own browser.
+
+    The user types their credentials into their institution's page; this
+    process never sees, stores or replays them. Articles open one at a time and
+    only after the user presses Enter, capped at MAX_INTERACTIVE_ARTICLES, so
+    retrieval stays human-paced as library licences require.
+    """
+
+    import sys
+    import webbrowser
+
+    opener = opener or webbrowser.open_new_tab
+    if interactive is None:
+        interactive = sys.stdin.isatty()
+    opened = {"login_pages": 0, "articles": 0}
+    if open_login:
+        for name, url in login_pages(rows, profile):
+            print(f"Opening sign-in page for {name}: {url}")
+            opener(url)
+            opened["login_pages"] += 1
+        if opened["login_pages"]:
+            print("Sign in with your own account in the browser windows that opened.")
+    if open_articles:
+        if not interactive:
+            raise ProfileError("--open-articles needs an interactive terminal (human-paced opening)")
+        limit = min(open_articles, MAX_INTERACTIVE_ARTICLES)
+        candidates = [row for row in plan_access(rows, profile) if row.landing_url][:limit]
+        for index, row in enumerate(candidates, 1):
+            reply = ask(f"[{index}/{len(candidates)}] Enter to open, q to stop: {row.title[:80]} ")
+            if reply.strip().lower() == "q":
+                break
+            opener(row.landing_url)
+            opened["articles"] += 1
+    return opened

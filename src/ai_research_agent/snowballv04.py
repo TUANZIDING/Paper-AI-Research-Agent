@@ -12,6 +12,9 @@ rule. It is never evidence that a systematic-review search is complete.
 
 from __future__ import annotations
 
+import os
+import sys
+
 from dataclasses import asdict, dataclass, field
 import html
 import re
@@ -139,7 +142,9 @@ class SnowballEngine:
         stop_threshold: int = 0,
         max_candidates_per_round: int = 5000,
         directions: tuple[str, ...] = ("backward", "forward"),
+        progress_path: str | None = None,
     ):
+        self.progress_path = progress_path
         if max_rounds < 1 or per_paper_limit < 1 or stop_threshold < 0:
             raise ValueError("Invalid snowball limits")
         if not set(directions) <= {"backward", "forward"} or not directions:
@@ -239,6 +244,18 @@ class SnowballEngine:
                     log.new_not_relevant += 1
             log.cumulative_relevant = len(relevant)
             rounds.append(log)
+            if self.progress_path:
+                start = len(relevant) - log.new_relevant
+                os.makedirs(os.path.dirname(self.progress_path) or ".", exist_ok=True)
+                with open(self.progress_path, "a", encoding="utf-8") as handle:
+                    for item in relevant[start:]:
+                        title = " ".join(item.title.split())
+                        handle.write(f"{number}\t{item.pmid or ''}\t{item.doi or ''}\t{title}\n")
+            print(
+                f"[snowball] round {number}: frontier {log.frontier_size}, "
+                f"new relevant {log.new_relevant}, cumulative {log.cumulative_relevant}",
+                file=sys.stderr, flush=True,
+            )
             if log.new_relevant <= self.stop_threshold:
                 stop_reason = (
                     f"Saturated at round {number}: {log.new_relevant} new relevant record(s), "

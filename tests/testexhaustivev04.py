@@ -396,5 +396,22 @@ class ExhaustiveRunTests(unittest.TestCase):
         self.assertEqual(summary["oa_triage"].get("needs_institutional_access"), 2)
 
 
+class ResumeCacheTests(unittest.TestCase):
+    def test_reuse_cache_serves_hits_without_network(self):
+        from ai_research_agent.cache import HttpCache
+        from ai_research_agent.http import JsonHttpClient
+
+        with tempfile.TemporaryDirectory() as tmp:
+            cache = HttpCache(Path(tmp) / "c.sqlite")
+            url = "https://www.ebi.ac.uk/europepmc/webservices/rest/MED/1/references?format=json"
+            cache.put_response(method="GET", url=url, body=b'{"ok": 1}', status=200,
+                               fetched_at="2026-10-31T00:00:00Z", source="test")
+            client = JsonHttpClient("t", cache=cache, reuse_cache=True, retries=0, timeout=0.01)
+            self.assertEqual(client.get_json(url), {"ok": 1})
+            self.assertEqual(client.cache_hits, 1)
+            with self.assertRaises(ValueError):
+                JsonHttpClient("t", reuse_cache=True)
+
+
 if __name__ == "__main__":
     unittest.main()

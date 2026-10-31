@@ -5,6 +5,9 @@ import unittest
 from pathlib import Path
 
 from ai_research_agent.institutionv04 import (
+    MAX_INTERACTIVE_ARTICLES,
+    login_pages,
+    open_in_browser,
     PROFILE_ENV,
     ProfileError,
     load_profile,
@@ -88,6 +91,34 @@ class InstitutionProfileTests(unittest.TestCase):
             os.environ.pop(PROFILE_ENV, None)
             if old is not None:
                 os.environ[PROFILE_ENV] = old
+
+    def test_login_popup_opens_distinct_pages_and_never_prompts_for_credentials(self):
+        profile = parse_profile(PROFILE)
+        rows = [{"title": "A", "doi": "10.1002/a"}, {"title": "B", "doi": "10.1111/b"},
+                {"title": "C", "doi": "10.1667/c"}]
+        self.assertEqual([n for n, _ in login_pages(rows, profile)], ["Wiley", "WebVPN"])
+        opened, prompts = [], []
+        result = open_in_browser(rows, profile, opener=opened.append, interactive=False)
+        self.assertEqual(result, {"login_pages": 2, "articles": 0})
+        self.assertEqual(opened, ["https://onlinelibrary.wiley.com/action/ssostart", "https://webvpn.example.edu/"])
+        with self.assertRaises(ProfileError):
+            open_in_browser(rows, profile, open_login=False, open_articles=2, opener=opened.append, interactive=False)
+
+    def test_articles_open_one_at_a_time_with_cap_and_quit(self):
+        profile = parse_profile(PROFILE)
+        rows = [{"title": f"T{i}", "doi": f"10.1002/{i}"} for i in range(30)]
+        opened, answers = [], iter(["", "", "q"])
+        prompts = []
+
+        def ask(text):
+            prompts.append(text)
+            return next(answers)
+
+        result = open_in_browser(rows, profile, open_login=False, open_articles=99,
+                                 opener=opened.append, ask=ask, interactive=True)
+        self.assertEqual(result["articles"], 2)
+        self.assertTrue(all("password" not in p.lower() for p in prompts))
+        self.assertIn(f"/{MAX_INTERACTIVE_ARTICLES}]", prompts[0])
 
 
 if __name__ == "__main__":

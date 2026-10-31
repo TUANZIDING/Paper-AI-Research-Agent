@@ -308,6 +308,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     links.add_argument("run_dir", type=Path)
     links.add_argument("--institution-profile", type=Path)
+    links.add_argument("--open-login", action="store_true",
+                       help="Open each needed platform's institutional sign-in page in your own browser")
+    links.add_argument("--open-articles", type=int, default=0, metavar="N",
+                       help="Then open up to N articles one at a time, waiting for Enter between each (max 20)")
 
     exhaustive = subparsers.add_parser(
         "exhaustive",
@@ -336,6 +340,10 @@ def build_parser() -> argparse.ArgumentParser:
     exhaustive.add_argument("--download-oa", action="store_true",
                             help="Download CC BY/CC0-class OA full text only (fail-closed)")
     exhaustive.add_argument("--download-max", type=int, default=20)
+    exhaustive.add_argument("--cache-db", type=Path,
+                            help="SQLite response cache; with --resume, cached responses are reused")
+    exhaustive.add_argument("--resume", action="store_true",
+                            help="Re-run the same command and fetch only responses missing from --cache-db")
     exhaustive.add_argument("--institution-profile", type=Path,
                             help="Your own institution's access profile (JSON, no credentials); "
                                  "defaults to $RESEARCH_AGENT_INSTITUTION_PROFILE")
@@ -1056,6 +1064,11 @@ def run_institution_links(args: argparse.Namespace) -> int:
         raise SystemExit("Pass --institution-profile or set RESEARCH_AGENT_INSTITUTION_PROFILE")
     counts = write_access_outputs(args.run_dir, read_needs_tsv(tsv), profile)
     print(json.dumps({"institution": profile.institution, "routes": counts}, ensure_ascii=False))
+    if args.open_login or args.open_articles:
+        from .institutionv04 import open_in_browser, read_needs_tsv as reread
+
+        open_in_browser(reread(tsv), profile, open_login=args.open_login,
+                        open_articles=args.open_articles)
     return 0
 
 
@@ -1074,9 +1087,13 @@ def run_exhaustive(args: argparse.Namespace) -> int:
     stamp = started.strftime("%Y-%m-%dT%H%M%S")
     slug = re.sub(r"[^A-Za-z0-9]+", "-", args.query).strip("-")[:40] or "query"
     out_dir = args.output.resolve() / f"exhaustive-{stamp}-{slug}"
+    if args.resume and not args.cache_db:
+        raise SystemExit("--resume requires --cache-db")
     client = JsonHttpClient(
         _user_agent(),
         archive_dir=None if args.no_archive else out_dir / "raw-responses",
+        cache=HttpCache(args.cache_db.resolve()) if args.cache_db else None,
+        reuse_cache=bool(args.resume),
     )
     config = ExhaustiveConfig(
         query=args.query,

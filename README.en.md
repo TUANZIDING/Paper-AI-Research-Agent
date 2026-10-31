@@ -85,6 +85,8 @@ research-agent exhaustive '...' --require '...'            # applied automatical
 research-agent institution-links runs/exhaustive-...        # or rebuild for an existing run
 ```
 
+- Long runs can resume: add `--cache-db runs/cache.sqlite --resume` and re-run the same command; cached responses are reused and only missing ones are fetched.
+- Personal use: `research-agent institution-links <run dir> --open-login` pops up the needed platforms' institutional sign-in pages (CARSI/WebVPN) in your own browser; you type your credentials on your institution's page and the tool never touches them. `--open-articles N` then opens articles one at a time (Enter per article, max 20).
 - A profile holds **no usernames, passwords, cookies or tokens**; such fields are rejected. Keep it outside the repository; its path is not written to the manifest.
 - The tool **never logs in, stores sessions, or downloads through institutional access**. The entitled person opens each article (Zotero Connector works well); library licences generally forbid software-driven bulk downloading.
 - Anyone else using this project supplies a profile for **the institution that licenses them**; the repository ships only a generic example.

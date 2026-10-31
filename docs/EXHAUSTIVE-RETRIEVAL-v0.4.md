@@ -98,3 +98,8 @@ research-agent institution-links runs/exhaustive-...        # 或对已有运行
 - 档案**不含任何账号、密码、Cookie 或令牌**，含这类字段会被拒绝；档案放在仓库外，路径不写入 manifest。
 - 工具**不登录、不保存会话、不通过机构权限自动下载**。逐篇由有权限的本人打开（可配合 Zotero Connector）；图书馆许可普遍禁止用软件批量下载。
 - 其他人使用本项目时，需要提供**自己订阅机构**的档案；仓库只附通用示例。
+
+## 断点续跑与登录弹窗
+
+- 长任务可断点续跑：加 `--cache-db runs/cache.sqlite --resume`，用同一命令重跑时已缓存的响应直接复用，只补抓缺失部分。
+- 个人使用：`research-agent institution-links <运行目录> --open-login` 会在你自己的浏览器里弹出所需平台的机构登录页（CARSI/WebVPN），账号密码在学校页面上由你本人输入，工具不接触；`--open-articles N` 再逐篇打开（每篇按回车，最多 20 篇）。
