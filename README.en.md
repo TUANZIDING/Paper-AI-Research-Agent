@@ -267,6 +267,7 @@ Next: **A retrieval reliability and coverage → B full text and evidence → C 
 
 ## Documentation (currently Chinese)
 
+- [Instructions for Codex and other coding agents](AGENTS.md)
 - [Source and legal boundaries](docs/SOURCE_POLICY.md)
 - [v0.4 exhaustive retrieval](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md)
 - [Acceptance gates](docs/ACCEPTANCE_GATES.md)

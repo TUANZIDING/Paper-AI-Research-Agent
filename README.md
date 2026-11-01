@@ -258,6 +258,7 @@ v0.4.0 快照（2026-11-01）：239 项单元测试通过（1 项需联网跳过
 
 ## 文档
 
+- [给 Codex 等编码智能体的说明](AGENTS.md)
 - [数据源与合法边界](docs/SOURCE_POLICY.md)
 - [v0.4 尽量穷尽检索](docs/EXHAUSTIVE-RETRIEVAL-v0.4.md)
 - [分阶段验收门](docs/ACCEPTANCE_GATES.md)
